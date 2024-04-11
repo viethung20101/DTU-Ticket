@@ -2,16 +2,16 @@ import { DataTypes, Model, Sequelize } from 'sequelize'
 import { UserVerifyStatus } from '~/constants/enums'
 
 class User extends Model {
-  private _id!: number
-  private name!: string
-  private email!: string
-  private date_of_birth!: Date
-  private password!: string
-  private created_at!: Date
-  private update_at!: Date
-  private email_verify_token!: string
-  private forgot_password_token!: string
-  private verify!: UserVerifyStatus
+  public _id!: number
+  public name!: string
+  public email!: string
+  public date_of_birth!: Date
+  public password!: string
+  public email_verify_token!: string
+  public forgot_password_token!: string
+  public verify!: UserVerifyStatus
+  public created_at!: Date
+  public update_at!: Date
 
   public static initialize(sequelize: Sequelize) {
     this.init(
@@ -41,15 +41,6 @@ class User extends Model {
           type: DataTypes.STRING,
           allowNull: false
         },
-        created_at: {
-          type: DataTypes.DATE,
-          defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-        },
-        update_at: {
-          type: DataTypes.DATE,
-          defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-          onUpdate: 'CASCADE'
-        },
         email_verify_token: {
           type: DataTypes.STRING
         },
@@ -60,6 +51,15 @@ class User extends Model {
           type: DataTypes.ENUM,
           values: ['Unverified', 'Verified', 'Banned'],
           defaultValue: 'Unverified'
+        },
+        created_at: {
+          type: DataTypes.DATE,
+          defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        },
+        update_at: {
+          type: DataTypes.DATE,
+          defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+          onUpdate: 'CASCADE'
         }
       },
       {
