@@ -10,3 +10,13 @@ export enum TokenType {
   ForgotPasswordToken,
   EmailVerifyToken
 }
+
+export enum ActivatedStatus {
+  Activated,
+  NotActivated
+}
+
+export enum ShownStatus {
+  Shown,
+  NotShown
+}

@@ -1,9 +1,7 @@
 import express from 'express'
 import usersRouter from '~/routes/users.routes'
 import db from './services/database.services'
-const app = express()
-const port = 3000
-app.use(express.json())
+import { defaultErrorHandler } from '~/middlewares/errors.middlewares'
 
 db.sequelize.sync()
   .then(() => {
@@ -13,11 +11,16 @@ db.sequelize.sync()
     console.log('Failed to sync db: ' + err.message)
   })
 
+const app = express()
+
+app.use(express.json())
+
 app.get('/', (req, res) => {
   res.send('ok')
 })
 app.use('/api/v1/users', usersRouter)
+app.use(defaultErrorHandler)
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.listen(process.env.PORT, () => {
+  console.log(`App listening on port ${process.env.PORT}`)
 })
