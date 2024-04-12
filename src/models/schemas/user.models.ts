@@ -2,7 +2,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize'
 import { UserVerifyStatus } from '~/constants/enums'
 
 class User extends Model {
-  public _id!: number
+  public _id!: string
   public name!: string
   public email!: string
   public date_of_birth!: Date
@@ -17,9 +17,8 @@ class User extends Model {
     this.init(
       {
         _id: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           allowNull: false,
-          autoIncrement: true,
           primaryKey: true
         },
         name: {
@@ -56,7 +55,7 @@ class User extends Model {
           type: DataTypes.DATE,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
         },
-        update_at: {
+        updated_at: {
           type: DataTypes.DATE,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
           onUpdate: 'CASCADE'
@@ -69,7 +68,7 @@ class User extends Model {
         underscored: true,
         tableName: 'users',
         createdAt: 'created_at',
-        updatedAt: 'update_at'
+        updatedAt: 'updated_at'
       }
     )
   }

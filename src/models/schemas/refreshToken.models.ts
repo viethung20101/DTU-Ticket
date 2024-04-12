@@ -3,7 +3,7 @@ import User from './user.models'
 
 class RefreshToken extends Model {
   public _id!: number
-  public uid!: number
+  public uid!: string
   public token!: string
   public created_at!: Date
   public update_at!: Date
@@ -18,7 +18,7 @@ class RefreshToken extends Model {
           primaryKey: true
         },
         uid: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           allowNull: false
         },
         token: {
@@ -29,7 +29,7 @@ class RefreshToken extends Model {
           type: DataTypes.DATE,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
         },
-        update_at: {
+        updated_at: {
           type: DataTypes.DATE,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
           onUpdate: 'CASCADE'
@@ -42,7 +42,7 @@ class RefreshToken extends Model {
         underscored: true,
         tableName: 'refresh_tokens',
         createdAt: 'created_at',
-        updatedAt: 'update_at'
+        updatedAt: 'updated_at'
       }
     )
     this.belongsTo(User, { foreignKey: 'uid', as: 'users' })
