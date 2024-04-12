@@ -66,7 +66,7 @@ class TicketDetails extends Model {
           type: DataTypes.DATE,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
         },
-        update_at: {
+        updated_at: {
           type: DataTypes.DATE,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
           onUpdate: 'CASCADE'
@@ -79,7 +79,7 @@ class TicketDetails extends Model {
         underscored: true,
         tableName: 'ticket_details',
         createdAt: 'created_at',
-        updatedAt: 'update_at'
+        updatedAt: 'updated_at'
       }
     )
   }

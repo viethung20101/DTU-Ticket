@@ -73,7 +73,7 @@ class Ticket extends Model {
           type: DataTypes.DATE,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
         },
-        update_at: {
+        updated_at: {
           type: DataTypes.DATE,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
           onUpdate: 'CASCADE'
@@ -86,7 +86,7 @@ class Ticket extends Model {
         underscored: true,
         tableName: 'tickets',
         createdAt: 'created_at',
-        updatedAt: 'update_at'
+        updatedAt: 'updated_at'
       }
     )
     this.belongsTo(GroupTicket, { foreignKey: 'gid', as: 'group_tickets' })
