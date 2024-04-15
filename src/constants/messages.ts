@@ -32,7 +32,9 @@ const USERS_MESSAGES = {
   INVALID_FORGOT_PASSWORD_TOKEN: 'Invalid forgot password token',
   VERIFY_FORGOT_PASSWORD_SUCCESS: 'verify forgot password success',
   RESET_PASSWORD_SUCCESS: 'Reset passowrd success',
-  GET_ME_SUCCESS: 'Get me success'
+  GET_ME_SUCCESS: 'Get me success',
+  EMAIL_NOT_VERIFIED: 'Email not verified',
+  GET_ALL_TICKETS_SUCCESS: 'Get all tickets success'
 } as const
 
 export default USERS_MESSAGES

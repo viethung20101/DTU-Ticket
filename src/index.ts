@@ -1,7 +1,11 @@
 import express from 'express'
 import usersRouter from '~/routes/users.routes'
+import ticketsRouter from '~/routes/tickets.routes'
 import db from './services/database.services'
 import { defaultErrorHandler } from '~/middlewares/errors.middlewares'
+import { config } from 'dotenv'
+
+config()
 
 db.sequelize.sync()
   .then(() => {
@@ -19,6 +23,9 @@ app.get('/', (req, res) => {
   res.send('ok')
 })
 app.use('/api/v1/users', usersRouter)
+
+app.use('/api/v1/tickets', ticketsRouter)
+
 app.use(defaultErrorHandler)
 
 app.listen(process.env.PORT, () => {
