@@ -5,17 +5,26 @@ import {
   LogoutReqBody,
   TokenPayload,
   verifyForgotPasswordTokenReqBody,
-  resetPasswordReqBody
+  resetPasswordReqBody,
+  LoginReqBody
 } from '~/models/Requests/user.requests'
 import usersService from '~/services/users.services'
 import User from '~/models/schemas/user.models'
 import USERS_MESSAGES from '~/constants/messages'
 import HTTP_STATUS from '~/constants/httpStatus'
 
-export const loginController = async (req: Request, res: Response) => {
+export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   const user = req.user as User
-  const user_id = user.dataValues._id
-  const result = await usersService.login(user_id.toString())
+  const result = await usersService.login({ user_id: user.dataValues._id, verify: user.dataValues.verify })
+  return res.json({
+    message: USERS_MESSAGES.LOGIN_SUCCESS,
+    result
+  })
+}
+
+export const oauthController = async (req: Request, res: Response) => {
+  const user = req.user as User
+  const result = await usersService.login({ user_id: user.dataValues._id, verify: user.dataValues.verify })
   return res.json({
     message: USERS_MESSAGES.LOGIN_SUCCESS,
     result
@@ -83,7 +92,7 @@ export const resendVerifyEmailController = async (req: Request, res: Response) =
 
 export const forgotPasswordController = async (req: Request, res: Response) => {
   const user = req.user as User
-  await usersService.forgotPassword(user.dataValues._id)
+  await usersService.forgotPassword({ user_id: user.dataValues._id, verify: user.dataValues.verify })
   return res.json({
     message: USERS_MESSAGES.CHECK_EMAIL_TO_CHANGE_PASSWORD
   })

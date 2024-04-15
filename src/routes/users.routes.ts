@@ -7,7 +7,8 @@ import {
   emailVerifyTokenValidator,
   forgotPasswordValidator,
   verifyForgotPasswordTokenValidator,
-  resetPasswordValidator
+  resetPasswordValidator,
+  verifiedUserValidator
 } from '../middlewares/users.middlewares'
 import {
   registerController,
@@ -18,13 +19,16 @@ import {
   forgotPasswordController,
   verifyForgotPasswordTokenController,
   resetPasswordController,
-  getMeController
+  getMeController,
+  oauthController
 } from '~/controllers/users.controllers'
 import { wrapRequestHandler } from '~/utils/handlers'
 
 const usersRouter = Router()
 
 usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
+
+usersRouter.post('/oauth/google', wrapRequestHandler(oauthController))
 
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(logoutController))
 

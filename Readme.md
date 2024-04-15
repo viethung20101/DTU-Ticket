@@ -1,5 +1,8 @@
 <h1 align="center">DTU Ticket</h1>
-![NPM Version](https://img.shields.io/npm/v/npm)
+<p>
+  <img alt="Version" src="![NPM Version](https://img.shields.io/npm/v/npm)">
+</p>
+
 
 ## ✍️ Run Locally
 Clone the project 
