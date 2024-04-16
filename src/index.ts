@@ -1,6 +1,7 @@
 import express from 'express'
 import usersRouter from '~/routes/users.routes'
 import ticketsRouter from '~/routes/tickets.routes'
+import adminRouter from '~/routes/admin.routes'
 import db from './services/database.services'
 import { defaultErrorHandler } from '~/middlewares/errors.middlewares'
 import { config } from 'dotenv'
@@ -22,6 +23,9 @@ app.use(express.json())
 app.get('/', (req, res) => {
   res.send('ok')
 })
+
+app.use('/api/v1/admin', adminRouter)
+
 app.use('/api/v1/users', usersRouter)
 
 app.use('/api/v1/tickets', ticketsRouter)

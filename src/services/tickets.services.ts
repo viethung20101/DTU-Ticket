@@ -1,5 +1,7 @@
 import USERS_MESSAGES from '~/constants/messages'
+import GroupTicket from '~/models/schemas/groupTicket.models'
 import Ticket from '~/models/schemas/ticket.models'
+import TicketDetails from '~/models/schemas/ticketDetails.models'
 
 class TicketsService {
   async getTickets({ page, size }: { page: number; size: number }) {
@@ -13,6 +15,21 @@ class TicketsService {
       const limit = size
       const offset = (page - 1) * size
       const ticket = await Ticket.findAll({
+        attributes: ['id', 'name'],
+        include: [
+          {
+            model: GroupTicket,
+            attributes: ['name'],
+            where: { shown: true }
+          },
+          {
+            model: TicketDetails,
+            attributes: ['price', 'day_of_week', 'short_description']
+          }
+        ],
+        where: {
+          shown: true
+        },
         limit,
         offset
       })

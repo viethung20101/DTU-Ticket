@@ -44,10 +44,6 @@ class TicketDetails extends Model {
           type: DataTypes.DOUBLE,
           allowNull: true
         },
-        card_type: {
-          type: DataTypes.STRING,
-          allowNull: true
-        },
         activated: {
           type: DataTypes.ENUM,
           values: ['Activated', 'NotActivated'],
