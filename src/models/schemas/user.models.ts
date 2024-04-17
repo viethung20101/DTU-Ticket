@@ -1,5 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
-import { UserVerifyStatus } from '~/constants/enums'
+import { UserVerifyStatus, RoleType } from '~/constants/enums'
 
 class User extends Model {
   public _id!: string
@@ -9,6 +9,7 @@ class User extends Model {
   public password!: string
   public email_verify_token!: string
   public forgot_password_token!: string
+  public role!: RoleType
   public verify!: UserVerifyStatus
   public created_at!: Date
   public update_at!: Date
@@ -45,6 +46,11 @@ class User extends Model {
         },
         forgot_password_token: {
           type: DataTypes.STRING
+        },
+        role: {
+          type: DataTypes.ENUM,
+          values: ['SuperAdmin', 'Admin', 'User'],
+          defaultValue: 'User'
         },
         verify: {
           type: DataTypes.ENUM,

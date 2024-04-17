@@ -11,7 +11,6 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import { TokenPayload } from '~/models/Requests/user.requests'
-import { UserVerifyStatus } from '~/constants/enums'
 
 const passwordSchema: ParamSchema = {
   notEmpty: {
@@ -199,13 +198,9 @@ export const registorValidator = validate(
       date_of_birth: {
         isISO8601: {
           options: {
-            strict: true,
-            strictSeparator: true
+            strict: true
           },
-          errorMessage: new ErrorWithStatus({
-            message: USERS_MESSAGES.UNAUTHORIZED,
-            status: HTTP_STATUS.UNAUTHORIZED
-          })
+          errorMessage: USERS_MESSAGES.INCORRECT_DATE_FORMAT
         }
       }
     },

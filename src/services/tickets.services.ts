@@ -20,7 +20,9 @@ class TicketsService {
           {
             model: GroupTicket,
             attributes: ['name'],
-            where: { shown: true }
+            where: {
+              shown: 'Shown'
+            }
           },
           {
             model: TicketDetails,
@@ -28,7 +30,7 @@ class TicketsService {
           }
         ],
         where: {
-          shown: true
+          shown: 'Shown'
         },
         limit,
         offset

@@ -3,6 +3,6 @@ import { getTicketsController } from '~/controllers/tickets.controllers'
 
 const ticketsRouter = Router()
 
-ticketsRouter.get('/get-ticket', getTicketsController)
+ticketsRouter.get('/data', getTicketsController)
 
 export default ticketsRouter

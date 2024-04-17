@@ -5,7 +5,7 @@ class GroupTicket extends Model {
   private _id!: number
   private code_gticket!: string
   private name!: string
-  private short_decription!: string
+  private short_decription!: Text
   private description!: Text
   private date_start!: Date
   private date_end!: Date
@@ -32,21 +32,21 @@ class GroupTicket extends Model {
           type: DataTypes.STRING,
           allowNull: false
         },
-        short_decription: {
-          type: DataTypes.STRING,
-          allowNull: true
-        },
-        decription: {
+        short_description: {
           type: DataTypes.TEXT,
-          allowNull: true
+          allowNull: false
+        },
+        description: {
+          type: DataTypes.TEXT,
+          allowNull: false
         },
         date_start: {
           type: DataTypes.DATE,
-          allowNull: true
+          allowNull: false
         },
         date_end: {
           type: DataTypes.DATE,
-          allowNull: true
+          allowNull: false
         },
         activated: {
           type: DataTypes.ENUM,

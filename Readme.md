@@ -1,6 +1,6 @@
 <h1 align="center">DTU Ticket</h1>
 <p>
-  <img alt="Version" src="![NPM Version](https://img.shields.io/npm/v/npm)">
+  <img src="![NPM Version](https://img.shields.io/npm/v/npm)">
 </p>
 
 

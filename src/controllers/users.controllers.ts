@@ -15,7 +15,11 @@ import HTTP_STATUS from '~/constants/httpStatus'
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   const user = req.user as User
-  const result = await usersService.login({ user_id: user.dataValues._id, verify: user.dataValues.verify })
+  const result = await usersService.login({
+    user_id: user.dataValues._id,
+    verify: user.dataValues.verify,
+    role: user.dataValues.role
+  })
   return res.json({
     message: USERS_MESSAGES.LOGIN_SUCCESS,
     result
@@ -24,7 +28,11 @@ export const loginController = async (req: Request<ParamsDictionary, any, LoginR
 
 export const oauthController = async (req: Request, res: Response) => {
   const user = req.user as User
-  const result = await usersService.login({ user_id: user.dataValues._id, verify: user.dataValues.verify })
+  const result = await usersService.login({
+    user_id: user.dataValues._id,
+    verify: user.dataValues.verify,
+    role: user.dataValues.role
+  })
   return res.json({
     message: USERS_MESSAGES.LOGIN_SUCCESS,
     result
@@ -64,7 +72,7 @@ export const emailVerifyController = async (req: Request, res: Response) => {
       message: USERS_MESSAGES.EMAIL_ALREADY_VERIFIED_BEFORE
     })
   }
-  const result = await usersService.verifyEmail(user_id)
+  const result = await usersService.verifyEmail(user_id, user.dataValues.role)
   return res.json({
     message: USERS_MESSAGES.EMAIL_VERIFY_SUCCESS,
     result
