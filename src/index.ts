@@ -5,8 +5,7 @@ import adminRouter from '~/routes/admin.routes'
 import db from './services/database.services'
 import { defaultErrorHandler } from '~/middlewares/errors.middlewares'
 import { config } from 'dotenv'
-import { accessTokenValidator } from './middlewares/users.middlewares'
-import { roleAdminValidator } from './middlewares/admin.middlewares'
+import { accessTokenValidator, verifiedUserValidator } from './middlewares/users.middlewares'
 
 config()
 
@@ -26,7 +25,7 @@ app.get('/', (req, res) => {
   res.send('ok')
 })
 
-app.use('/api/v1/admin', accessTokenValidator, roleAdminValidator, adminRouter)
+app.use('/api/v1/admin', accessTokenValidator, verifiedUserValidator, adminRouter)
 
 app.use('/api/v1/users', usersRouter)
 

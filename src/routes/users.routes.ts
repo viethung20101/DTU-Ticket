@@ -8,7 +8,8 @@ import {
   forgotPasswordValidator,
   verifyForgotPasswordTokenValidator,
   resetPasswordValidator,
-  verifiedUserValidator
+  verifiedUserValidator,
+  changePasswordValidator
 } from '../middlewares/users.middlewares'
 import {
   registerController,
@@ -20,7 +21,8 @@ import {
   verifyForgotPasswordTokenController,
   resetPasswordController,
   getMeController,
-  oauthController
+  oauthController,
+  changePasswordController
 } from '~/controllers/users.controllers'
 import { wrapRequestHandler } from '~/utils/handlers'
 
@@ -49,5 +51,13 @@ usersRouter.post(
 usersRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(resetPasswordController))
 
 usersRouter.get('/me', accessTokenValidator, wrapRequestHandler(getMeController))
+
+usersRouter.put(
+  '/change-password',
+  accessTokenValidator,
+  verifiedUserValidator,
+  changePasswordValidator,
+  wrapRequestHandler(changePasswordController)
+)
 
 export default usersRouter
