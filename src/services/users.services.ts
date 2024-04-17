@@ -8,6 +8,7 @@ import RefreshToken from '~/models/schemas/refreshToken.models'
 import { v4 as uuidv4 } from 'uuid'
 import USERS_MESSAGES from '~/constants/messages'
 import { sendVerifyEmail } from '~/utils/email'
+import { Op, where } from 'sequelize'
 
 class UsersService {
   private signAccessToken({ user_id, verify, role }: { user_id: string; verify: UserVerifyStatus; role: RoleType }) {
@@ -168,7 +169,7 @@ class UsersService {
   }
 
   async findOneUser(user_id: string) {
-    return await db.User.findOne({ where: { _id: user_id } })
+    return await User.findByPk(user_id)
   }
 
   async verifyEmail(user_id: string, role: RoleType) {
@@ -233,8 +234,39 @@ class UsersService {
   async getMe(user_id: string) {
     return await db.User.findOne({
       where: { _id: user_id },
-      attributes: { exclude: ['id', 'password', 'email_verify_token', 'forgot_password_token', 'role'] }
+      attributes: { exclude: ['id', 'password', 'email_verify_token', 'forgot_password_token'] }
     })
+  }
+
+  async changePassword(user_id: string, new_password: string) {
+    await User.update({ password: hashPassword(new_password), updated_at: new Date() }, { where: { _id: user_id } })
+  }
+
+  async setRole(user_id: string, role: RoleType) {
+    try {
+      await User.update({ role: role, updated_at: new Date() }, { where: { _id: user_id } })
+    } catch (error) {
+      return new Error('Error: ' + error)
+    }
+  }
+
+  async getUsers() {
+    try {
+      const users = await User.findAll({
+        attributes: { exclude: ['password', 'email_verify_token', 'forgot_password_token'] },
+        where: {
+          role: {
+            [Op.or]: ['Admin', 'User']
+          }
+        },
+        order: [['_id', 'ASC']]
+      })
+      return {
+        data: users
+      }
+    } catch (error) {
+      return new Error('Error: ' + error)
+    }
   }
 }
 

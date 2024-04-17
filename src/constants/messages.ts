@@ -36,6 +36,7 @@ const USERS_MESSAGES = {
   EMAIL_NOT_VERIFIED: 'Email not verified',
   GET_ALL_TICKETS_SUCCESS: 'Get all tickets success',
   ROLE_IS_NOT_ADMIN: 'Role is not admin',
+  ROLE_IS_NOT_SUPER_ADMIN: 'Role is not super admin',
   NAME_OF_GROUP_TICKETS_IS_REQUIRED: 'Name of group tickets is required',
   NAME_OF_GROUP_TICKETS_MUST_BE_A_STRING: 'Name of group tickets must be a string',
   SHORT_DESCRIPTION_IS_REQUIRED: 'Short decription is required',
@@ -43,7 +44,18 @@ const USERS_MESSAGES = {
   DESCRIPTION_IS_REQUIRED: 'Decription is required',
   DESCRIPTION_MUST_BE_A_STRING: 'Decription must be a string',
   END_DATE_MUST_BE_GREATER_THAN_START_DATE: 'End date must be greater than start date',
-  CREATE_GROUP_TICKET_SUCCESS: 'Create group ticket success'
+  CREATE_GROUP_TICKET_SUCCESS: 'Create group ticket success',
+  GROUP_ID_IS_REQUIRED: 'Group id is required',
+  GROUP_NOT_FOUND: 'Group not found',
+  GET_ALL_GROUP_TICKETS_SUCCESS: 'Get all group ticket success',
+  UPDATE_GROUP_TICKET_SUCCESS: 'Update group ticket success',
+  OUT_PASSWORD_NOT_MATCH: 'Out password not match',
+  CHANGE_PASSWORD_SUCCESS: 'Change password success',
+  DELETE_GROUP_TICKET_SUCCESS: 'Delete group ticket success',
+  USER_ID_IS_REQUIRED: 'User id is required',
+  ROLE_IS_REQUIRED: 'Role is required',
+  ROLE_NOT_FOUND: 'Role not found',
+  SET_ROLE_SUCCESS: 'Set role success'
 } as const
 
 export default USERS_MESSAGES
