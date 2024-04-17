@@ -22,7 +22,7 @@ class RefreshToken extends Model {
           allowNull: false
         },
         token: {
-          type: DataTypes.STRING,
+          type: DataTypes.TEXT,
           allowNull: false
         },
         created_at: {

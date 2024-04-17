@@ -1,3 +1,9 @@
+export enum RoleType {
+  SuperAdmin,
+  Admin,
+  User
+}
+
 export enum UserVerifyStatus {
   Unverified,
   Verified,

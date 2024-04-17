@@ -11,7 +11,7 @@ const USERS_MESSAGES = {
   PASSWORD_LENGTH_MUST_BE_FROM_6_TO_30: 'Password length must be from 6 to 30',
   PASSWORD_IS_TOO_WEEK: 'Password is too weak',
   CONFIRM_PASSWORD_NOT_MATCH_PASSWORD: 'Confirm password not match password',
-  DATE_OF_BIRTH_INVALIDATE: 'Date of birth invalidate',
+  INCORRECT_DATE_FORMAT: 'Incorrect date format',
   LOGIN_SUCCESS: 'Login successfully',
   LOGOUT_SUCCESS: 'Logout successfully',
   USER_NOT_FOUND: 'User not found',
@@ -34,7 +34,16 @@ const USERS_MESSAGES = {
   RESET_PASSWORD_SUCCESS: 'Reset passowrd success',
   GET_ME_SUCCESS: 'Get me success',
   EMAIL_NOT_VERIFIED: 'Email not verified',
-  GET_ALL_TICKETS_SUCCESS: 'Get all tickets success'
+  GET_ALL_TICKETS_SUCCESS: 'Get all tickets success',
+  ROLE_IS_NOT_ADMIN: 'Role is not admin',
+  NAME_OF_GROUP_TICKETS_IS_REQUIRED: 'Name of group tickets is required',
+  NAME_OF_GROUP_TICKETS_MUST_BE_A_STRING: 'Name of group tickets must be a string',
+  SHORT_DESCRIPTION_IS_REQUIRED: 'Short decription is required',
+  SHORT_DESCRIPTION_MUST_BE_A_STRING: 'Short decription must be a string',
+  DESCRIPTION_IS_REQUIRED: 'Decription is required',
+  DESCRIPTION_MUST_BE_A_STRING: 'Decription must be a string',
+  END_DATE_MUST_BE_GREATER_THAN_START_DATE: 'End date must be greater than start date',
+  CREATE_GROUP_TICKET_SUCCESS: 'Create group ticket success'
 } as const
 
 export default USERS_MESSAGES
