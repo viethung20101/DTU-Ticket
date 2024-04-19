@@ -3,7 +3,6 @@ import { Sequelize } from 'sequelize'
 import User from '~/models/schemas/user.models'
 import GroupTicket from '~/models/schemas/groupTicket.models'
 import Ticket from '~/models/schemas/ticket.models'
-import TicketDetails from '~/models/schemas/ticketDetails.models'
 import RefreshToken from '~/models/schemas/refreshToken.models'
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -25,7 +24,6 @@ interface DbInterface {
   User: typeof User
   GroupTicket: typeof GroupTicket
   Ticket: typeof Ticket
-  TicketDetails: typeof TicketDetails
   RefreshToken: typeof RefreshToken
 }
 
@@ -35,14 +33,12 @@ const db: DbInterface = {
   User: User,
   GroupTicket: GroupTicket,
   Ticket: Ticket,
-  TicketDetails: TicketDetails,
   RefreshToken: RefreshToken
 }
 
 User.initialize(sequelize)
 GroupTicket.initialize(sequelize)
 Ticket.initialize(sequelize)
-TicketDetails.initialize(sequelize)
 RefreshToken.initialize(sequelize)
 
 export default db

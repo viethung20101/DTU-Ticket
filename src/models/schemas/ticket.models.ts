@@ -1,14 +1,17 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
 import { ActivatedStatus, ShownStatus } from '~/constants/enums'
 import GroupTicket from './groupTicket.models'
-import TicketDetails from './ticketDetails.models'
 
 class Ticket extends Model {
-  private _id!: number
+  private _id!: string
   private code_ticket!: string
-  private gid!: number
+  private gid!: string
   private name!: string
-  private short_name!: string
+  private price!: number
+  private day_of_week!: string
+  private short_description!: Text
+  private description!: Text
+  private color!: string
   private card_type!: string
   private date_start!: Date
   private date_end!: Date
@@ -22,9 +25,8 @@ class Ticket extends Model {
     this.init(
       {
         _id: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           allowNull: false,
-          autoIncrement: true,
           primaryKey: true
         },
         code_ticket: {
@@ -32,20 +34,36 @@ class Ticket extends Model {
           allowNull: true
         },
         gid: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           allowNull: false
         },
         name: {
           type: DataTypes.STRING,
           allowNull: false
         },
-        short_name: {
+        price: {
+          type: DataTypes.DOUBLE,
+          allowNull: false
+        },
+        day_of_week: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        short_description: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        description: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        color: {
           type: DataTypes.STRING,
           allowNull: true
         },
         card_type: {
           type: DataTypes.STRING,
-          allowNull: true
+          allowNull: false
         },
         date_start: {
           type: DataTypes.DATE,
@@ -90,9 +108,6 @@ class Ticket extends Model {
       }
     )
     this.belongsTo(GroupTicket, { foreignKey: 'gid', as: 'group_tickets' })
-  }
-  static associate() {
-    this.hasOne(TicketDetails)
   }
 }
 

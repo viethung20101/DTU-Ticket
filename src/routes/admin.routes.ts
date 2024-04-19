@@ -6,11 +6,23 @@ import {
   getGroupTicketsController,
   updateGroupTicketsController
 } from '~/controllers/groupTickets.controllers'
-import { createGroupValidator, updateGroupValidator } from '~/middlewares/groupTickets.middlewares'
+import {
+  createGroupValidator,
+  deleteGroupValidator,
+  updateGroupValidator
+} from '~/middlewares/groupTickets.middlewares'
 import { filterMiddleware } from '~/middlewares/common.middlewares'
 import { UpdateGroupReqBody } from '~/models/Requests/groupTicket.requests'
 import { setRoleValidator, roleAdminValidator, roleSuperAdminValidator } from '~/middlewares/admin.middlewares'
 import { getUsersController, setRoleController } from '~/controllers/admin.controllers'
+import {
+  createTicketsController,
+  deleteTicketController,
+  getAllTicketsController,
+  updateTicketController
+} from '~/controllers/tickets.controllers'
+import { createTicketValidator, deleteTicketValidator, updateTicketValidator } from '~/middlewares/tickets.middlewares'
+import { UpdateTicketReqBody } from '~/models/Requests/ticket.requests'
 
 const adminRouter = Router()
 
@@ -38,10 +50,45 @@ adminRouter.patch(
 adminRouter.post(
   '/group-tickets/delete',
   roleAdminValidator,
-  deleteGroupTicketsController,
+  deleteGroupValidator,
   wrapRequestHandler(deleteGroupTicketsController)
 )
 
+adminRouter.get('/tickets/data', roleAdminValidator, wrapRequestHandler(getAllTicketsController))
 
+adminRouter.post(
+  '/tickets/create',
+  roleAdminValidator,
+  createTicketValidator,
+  wrapRequestHandler(createTicketsController)
+)
+
+adminRouter.patch(
+  '/tickets/update',
+  roleAdminValidator,
+  updateTicketValidator,
+  filterMiddleware<UpdateTicketReqBody>([
+    'id',
+    'code_ticket',
+    'gid',
+    'name',
+    'price',
+    'day_of_week',
+    'short_description',
+    'description',
+    'color',
+    'card_type',
+    'date_start',
+    'date_end'
+  ]),
+  wrapRequestHandler(updateTicketController)
+)
+
+adminRouter.post(
+  '/tickets/delete',
+  roleAdminValidator,
+  deleteTicketValidator,
+  wrapRequestHandler(deleteTicketController)
+)
 
 export default adminRouter

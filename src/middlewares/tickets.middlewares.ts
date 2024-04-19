@@ -2,11 +2,36 @@ import { ParamSchema, checkSchema } from 'express-validator'
 import { validate } from '~/utils/validation'
 import USERS_MESSAGES from '~/constants/messages'
 import groupTicketsService from '~/services/groupTickets.services'
+import ticketsService from '~/services/tickets.services'
 
 const idSchema: ParamSchema = {
   isString: {
     errorMessage: USERS_MESSAGES.ID_MUST_BE_A_STRING
   },
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.TICKET_ID_IS_REQUIRED
+  },
+  trim: true,
+  custom: {
+    options: async (value, { req }) => {
+      const isGroupExist = await ticketsService.checkTicketExist(value)
+      if (!isGroupExist) {
+        throw new Error(USERS_MESSAGES.TICKET_NOT_FOUND)
+      }
+      req.id = value
+      return true
+    }
+  }
+}
+
+const codeTicketSchema: ParamSchema = {
+  isString: {
+    errorMessage: USERS_MESSAGES.CODE_TICKET_MUST_BE_A_STRING
+  },
+  trim: true
+}
+
+const gidSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.GROUP_ID_IS_REQUIRED
   },
@@ -25,10 +50,29 @@ const idSchema: ParamSchema = {
 
 const nameSchema: ParamSchema = {
   notEmpty: {
-    errorMessage: USERS_MESSAGES.NAME_OF_GROUP_TICKET_IS_REQUIRED
+    errorMessage: USERS_MESSAGES.NAME_OF_TICKET_IS_REQUIRED
   },
   isString: {
-    errorMessage: USERS_MESSAGES.NAME_OF_GROUP_TICKET_MUST_BE_A_STRING
+    errorMessage: USERS_MESSAGES.NAME_OF_TICKET_MUST_BE_A_STRING
+  },
+  trim: true
+}
+
+const priceSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.PRICE_IS_REQUIRED
+  },
+  isNumeric: {
+    errorMessage: USERS_MESSAGES.PRICE_IS_NOT_NUMERIC
+  }
+}
+
+const dayOfWeekSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.DAY_OF_WEEK_IS_REQUIRED
+  },
+  isString: {
+    errorMessage: USERS_MESSAGES.DAY_OF_WEEK_MUST_BE_A_STRING
   },
   trim: true
 }
@@ -49,6 +93,23 @@ const descriptionSchema: ParamSchema = {
   },
   isString: {
     errorMessage: USERS_MESSAGES.DESCRIPTION_MUST_BE_A_STRING
+  },
+  trim: true
+}
+
+const colorSchema: ParamSchema = {
+  isString: {
+    errorMessage: USERS_MESSAGES.COLOR_MUST_BE_A_STRING
+  },
+  trim: true
+}
+
+const cardTypeSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.CARD_TYPE_IS_REQUIRED
+  },
+  isString: {
+    errorMessage: USERS_MESSAGES.CARD_TYPE_MUST_BE_A_STRING
   },
   trim: true
 }
@@ -81,12 +142,17 @@ const dateEndSchema: ParamSchema = {
   }
 }
 
-export const createGroupValidator = validate(
+export const createTicketValidator = validate(
   checkSchema(
     {
+      gid: gidSchema,
       name: nameSchema,
+      price: priceSchema,
+      day_of_week: dayOfWeekSchema,
       short_description: shortDescriptionSchema,
       description: descriptionSchema,
+      color: colorSchema,
+      card_type: cardTypeSchema,
       date_start: dateStartSchema,
       date_end: dateEndSchema
     },
@@ -94,13 +160,28 @@ export const createGroupValidator = validate(
   )
 )
 
-export const updateGroupValidator = validate(
+export const updateTicketValidator = validate(
   checkSchema(
     {
       id: idSchema,
+      gid: {
+        optional: true,
+        ...gidSchema,
+        notEmpty: undefined
+      },
       name: {
         optional: true,
         ...nameSchema,
+        notEmpty: undefined
+      },
+      price: {
+        optional: true,
+        ...priceSchema,
+        notEmpty: undefined
+      },
+      day_of_week: {
+        optional: true,
+        ...dayOfWeekSchema,
         notEmpty: undefined
       },
       short_description: {
@@ -112,6 +193,14 @@ export const updateGroupValidator = validate(
         optional: true,
         ...descriptionSchema,
         notEmpty: undefined
+      },
+      color: {
+        optional: true,
+        ...colorSchema
+      },
+      card_type: {
+        optional: true,
+        ...cardTypeSchema
       },
       date_start: {
         optional: true,
@@ -126,7 +215,7 @@ export const updateGroupValidator = validate(
   )
 )
 
-export const deleteGroupValidator = validate(
+export const deleteTicketValidator = validate(
   checkSchema(
     {
       id: idSchema
