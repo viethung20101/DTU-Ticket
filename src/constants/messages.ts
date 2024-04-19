@@ -37,8 +37,8 @@ const USERS_MESSAGES = {
   GET_ALL_TICKETS_SUCCESS: 'Get all tickets success',
   ROLE_IS_NOT_ADMIN: 'Role is not admin',
   ROLE_IS_NOT_SUPER_ADMIN: 'Role is not super admin',
-  NAME_OF_GROUP_TICKETS_IS_REQUIRED: 'Name of group tickets is required',
-  NAME_OF_GROUP_TICKETS_MUST_BE_A_STRING: 'Name of group tickets must be a string',
+  NAME_OF_GROUP_TICKET_IS_REQUIRED: 'Name of group ticket is required',
+  NAME_OF_GROUP_TICKET_MUST_BE_A_STRING: 'Name of group ticket must be a string',
   SHORT_DESCRIPTION_IS_REQUIRED: 'Short decription is required',
   SHORT_DESCRIPTION_MUST_BE_A_STRING: 'Short decription must be a string',
   DESCRIPTION_IS_REQUIRED: 'Decription is required',
@@ -55,7 +55,24 @@ const USERS_MESSAGES = {
   USER_ID_IS_REQUIRED: 'User id is required',
   ROLE_IS_REQUIRED: 'Role is required',
   ROLE_NOT_FOUND: 'Role not found',
-  SET_ROLE_SUCCESS: 'Set role success'
+  SET_ROLE_SUCCESS: 'Set role success',
+  CODE_TICKET_MUST_BE_A_STRING: 'Code ticket must be a string',
+  NAME_OF_TICKET_IS_REQUIRED: 'Name of ticket is required',
+  NAME_OF_TICKET_MUST_BE_A_STRING: 'Name of ticket must be a string',
+  PRICE_IS_REQUIRED: 'Price is required',
+  PRICE_IS_NOT_NUMERIC: 'Price is not number',
+  DAY_OF_WEEK_IS_REQUIRED: 'Day of week is required',
+  DAY_OF_WEEK_MUST_BE_A_STRING: 'Day of week must be a string',
+  COLOR_MUST_BE_A_STRING: 'Color must be a string',
+  CARD_TYPE_IS_REQUIRED: 'Card type is required',
+  CARD_TYPE_MUST_BE_A_STRING: 'Card type must be a string',
+  CREATE_TICKET_SUCCESS: 'Create ticket success',
+  TICKET_ID_IS_REQUIRED: 'Ticket id is required',
+  TICKET_NOT_FOUND: 'Ticket not found',
+  UPDATE_TICKET_SUCCESS: 'Update ticket success',
+  DELETE_TICKET_SUCCESS: 'Delete ticket success',
+  ID_MUST_BE_A_STRING: ' Id must be a string',
+  GET_TICKET_DETAILS_SUCCESS: 'Get ticket details success'
 } as const
 
 export default USERS_MESSAGES

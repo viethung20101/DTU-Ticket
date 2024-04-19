@@ -2,7 +2,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize'
 import { ActivatedStatus, ShownStatus } from '~/constants/enums'
 
 class GroupTicket extends Model {
-  private _id!: number
+  private _id!: string
   private code_gticket!: string
   private name!: string
   private short_decription!: Text
@@ -19,9 +19,8 @@ class GroupTicket extends Model {
     this.init(
       {
         _id: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           allowNull: false,
-          autoIncrement: true,
           primaryKey: true
         },
         code_gticket: {
