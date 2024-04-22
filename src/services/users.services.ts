@@ -6,7 +6,6 @@ import { TokenType, UserVerifyStatus, RoleType } from '~/constants/enums'
 import { signToken } from '~/utils/jwt'
 import RefreshToken from '~/models/schemas/refreshToken.models'
 import { v4 as uuidv4 } from 'uuid'
-import USERS_MESSAGES from '~/constants/messages'
 import { sendVerifyEmail } from '~/utils/email'
 import { Op, where } from 'sequelize'
 
@@ -163,6 +162,41 @@ class UsersService {
           token: refresh_token
         }
       })
+    } catch (error) {
+      throw new Error('Error: ' + error)
+    }
+  }
+
+  async refreshToken({
+    user_id,
+    verify,
+    role,
+    old_refresh_token
+  }: {
+    user_id: string
+    verify: UserVerifyStatus
+    role: RoleType
+    old_refresh_token: string
+  }) {
+    try {
+      const [token] = await Promise.all([
+        this.signAccessAndRefreshToken({
+          user_id,
+          verify,
+          role
+        }),
+        RefreshToken.destroy({ where: { token: old_refresh_token } })
+      ])
+      const [access_token, refresh_token] = token
+      await RefreshToken.create({
+        uid: user_id,
+        token: refresh_token
+      })
+      return {
+        access_token,
+        refresh_token,
+        role
+      }
     } catch (error) {
       throw new Error('Error: ' + error)
     }

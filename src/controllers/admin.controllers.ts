@@ -7,7 +7,7 @@ import usersService from '~/services/users.services'
 export const getUsersController = async (req: Request, res: Response, next: NextFunction) => {
   const result = await usersService.getUsers()
   return res.json({
-    message: USERS_MESSAGES.SET_ROLE_SUCCESS,
+    message: USERS_MESSAGES.GET_ALL_USERS_SUCCESS,
     result
   })
 }

@@ -1,6 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
 import User from './user.models'
-import Ticket from './Ticket.models'
+import Ticket from './ticket.models'
 
 class Cart extends Model {
   private _id!: string

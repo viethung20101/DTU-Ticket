@@ -2,14 +2,19 @@ import express from 'express'
 import usersRouter from '~/routes/users.routes'
 import ticketsRouter from '~/routes/tickets.routes'
 import adminRouter from '~/routes/admin.routes'
+import cartRouter from '~/routes/cart.routes'
 import db from './services/database.services'
 import { defaultErrorHandler } from '~/middlewares/errors.middlewares'
 import { config } from 'dotenv'
 import { accessTokenValidator, verifiedUserValidator } from './middlewares/users.middlewares'
+import mediasRouter from './routes/medias.routes'
+import { initFolder } from './utils/file'
+import staticRouter from './routes/static.routes'
 
 config()
 
-db.sequelize.sync()
+db.sequelize
+  .sync()
   .then(() => {
     console.log('Synced db.')
   })
@@ -18,6 +23,8 @@ db.sequelize.sync()
   })
 
 const app = express()
+
+initFolder()
 
 app.use(express.json())
 
@@ -30,6 +37,12 @@ app.use('/api/v1/admin', accessTokenValidator, verifiedUserValidator, adminRoute
 app.use('/api/v1/users', usersRouter)
 
 app.use('/api/v1/tickets', ticketsRouter)
+
+app.use('/api/v1/cart', accessTokenValidator, verifiedUserValidator, cartRouter)
+
+app.use('/api/v1/medias', mediasRouter)
+
+app.use('/api/v1/static', staticRouter)
 
 app.use(defaultErrorHandler)
 

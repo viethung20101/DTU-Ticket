@@ -72,7 +72,9 @@ const USERS_MESSAGES = {
   UPDATE_TICKET_SUCCESS: 'Update ticket success',
   DELETE_TICKET_SUCCESS: 'Delete ticket success',
   ID_MUST_BE_A_STRING: ' Id must be a string',
-  GET_TICKET_DETAILS_SUCCESS: 'Get ticket details success'
+  GET_TICKET_DETAILS_SUCCESS: 'Get ticket details success',
+  REFRESH_TOKEN_SUCCESS: 'Refresh token success',
+  GET_ALL_USERS_SUCCESS: 'Get all users success'
 } as const
 
 export default USERS_MESSAGES
