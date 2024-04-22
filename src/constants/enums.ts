@@ -26,3 +26,8 @@ export enum ShownStatus {
   Shown,
   NotShown
 }
+
+export enum MediaType {
+  Image,
+  Video
+}

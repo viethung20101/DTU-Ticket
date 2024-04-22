@@ -6,7 +6,8 @@ import {
   TokenPayload,
   verifyForgotPasswordTokenReqBody,
   resetPasswordReqBody,
-  LoginReqBody
+  LoginReqBody,
+  RefreshTokenReqBody
 } from '~/models/Requests/user.requests'
 import usersService from '~/services/users.services'
 import User from '~/models/schemas/user.models'
@@ -56,6 +57,30 @@ export const logoutController = async (req: Request<ParamsDictionary, any, Logou
   await usersService.logout(refresh_token)
   return res.json({
     message: USERS_MESSAGES.LOGOUT_SUCCESS
+  })
+}
+
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
+  res: Response
+) => {
+  const { refresh_token } = req.body
+  const { user_id } = req.decoded_refresh_token as TokenPayload
+  const user = await usersService.findOneUser(user_id)
+  if (!user) {
+    return res.status(HTTP_STATUS.NOT_FOUND).json({
+      message: USERS_MESSAGES.USER_NOT_FOUND
+    })
+  }
+  const result = await usersService.refreshToken({
+    user_id: user.dataValues._id,
+    verify: user.dataValues.verify,
+    role: user.dataValues.role,
+    old_refresh_token: refresh_token
+  })
+  return res.json({
+    message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESS,
+    result
   })
 }
 

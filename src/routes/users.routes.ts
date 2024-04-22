@@ -22,7 +22,8 @@ import {
   resetPasswordController,
   getMeController,
   oauthController,
-  changePasswordController
+  changePasswordController,
+  refreshTokenController
 } from '~/controllers/users.controllers'
 import { wrapRequestHandler } from '~/utils/handlers'
 
@@ -33,6 +34,8 @@ usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
 usersRouter.post('/oauth/google', wrapRequestHandler(oauthController))
 
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(logoutController))
+
+usersRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
 
 usersRouter.post('/register', registorValidator, wrapRequestHandler(registerController))
 
