@@ -48,14 +48,12 @@ class User extends Model {
           type: DataTypes.STRING
         },
         role: {
-          type: DataTypes.ENUM,
-          values: ['SuperAdmin', 'Admin', 'User'],
-          defaultValue: 'User'
+          type: DataTypes.ENUM(RoleType.SuperAdmin, RoleType.Admin, RoleType.User),
+          defaultValue: RoleType.User
         },
         verify: {
-          type: DataTypes.ENUM,
-          values: ['Unverified', 'Verified', 'Banned'],
-          defaultValue: 'Unverified'
+          type: DataTypes.ENUM(UserVerifyStatus.Verified, UserVerifyStatus.Unverified, UserVerifyStatus.Banned),
+          defaultValue: UserVerifyStatus.Unverified
         },
         created_at: {
           type: DataTypes.DATE,

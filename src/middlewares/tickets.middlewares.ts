@@ -87,15 +87,15 @@ const shortDescriptionSchema: ParamSchema = {
   trim: true
 }
 
-const descriptionSchema: ParamSchema = {
-  notEmpty: {
-    errorMessage: USERS_MESSAGES.DESCRIPTION_IS_REQUIRED
-  },
-  isString: {
-    errorMessage: USERS_MESSAGES.DESCRIPTION_MUST_BE_A_STRING
-  },
-  trim: true
-}
+// const descriptionSchema: ParamSchema = {
+//   notEmpty: {
+//     errorMessage: USERS_MESSAGES.DESCRIPTION_IS_REQUIRED
+//   },
+//   isString: {
+//     errorMessage: USERS_MESSAGES.DESCRIPTION_MUST_BE_A_STRING
+//   },
+//   trim: true
+// }
 
 const colorSchema: ParamSchema = {
   isString: {
@@ -150,7 +150,7 @@ export const createTicketValidator = validate(
       price: priceSchema,
       day_of_week: dayOfWeekSchema,
       short_description: shortDescriptionSchema,
-      description: descriptionSchema,
+      // description: descriptionSchema,
       color: colorSchema,
       card_type: cardTypeSchema,
       date_start: dateStartSchema,
@@ -189,11 +189,11 @@ export const updateTicketValidator = validate(
         ...shortDescriptionSchema,
         notEmpty: undefined
       },
-      description: {
-        optional: true,
-        ...descriptionSchema,
-        notEmpty: undefined
-      },
+      // description: {
+      //   optional: true,
+      //   ...descriptionSchema,
+      //   notEmpty: undefined
+      // },
       color: {
         optional: true,
         ...colorSchema

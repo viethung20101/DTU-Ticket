@@ -1,12 +1,13 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
-import User from './user.models'
+import Order from './order.models'
 import Ticket from './ticket.models'
 
-class Cart extends Model {
+class OrderDetails extends Model {
   private _id!: string
-  private uid!: string
+  private oid!: string
   private tid!: string
   private quantity!: number
+  private price!: number
   private ticket_usage_date!: Date
   private created_at!: Date
   private update_at!: Date
@@ -19,7 +20,7 @@ class Cart extends Model {
           allowNull: false,
           primaryKey: true
         },
-        uid: {
+        oid: {
           type: DataTypes.STRING,
           allowNull: false
         },
@@ -29,6 +30,10 @@ class Cart extends Model {
         },
         quantity: {
           type: DataTypes.INTEGER,
+          allowNull: false
+        },
+        price: {
+          type: DataTypes.DOUBLE,
           allowNull: false
         },
         ticket_usage_date: {
@@ -47,17 +52,17 @@ class Cart extends Model {
       },
       {
         sequelize,
-        modelName: 'Cart',
+        modelName: 'OrderDetails',
         timestamps: true,
         underscored: true,
-        tableName: 'carts',
+        tableName: 'order_details',
         createdAt: 'created_at',
         updatedAt: 'updated_at'
       }
     )
-    this.belongsTo(User, { foreignKey: 'uid', as: 'users' })
+    this.belongsTo(Order, { foreignKey: 'oid', as: 'orders' })
     this.belongsTo(Ticket, { foreignKey: 'tid', as: 'tickets' })
   }
 }
 
-export default Cart
+export default OrderDetails

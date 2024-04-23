@@ -1,13 +1,13 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
-import User from './user.models'
-import Ticket from './ticket.models'
+import Order from './order.models'
+import { PaymentMethod } from '~/constants/enums'
 
-class Cart extends Model {
+class Payment extends Model {
   private _id!: string
-  private uid!: string
-  private tid!: string
-  private quantity!: number
-  private ticket_usage_date!: Date
+  private oid!: string
+  private payment_method!: PaymentMethod
+  private total_price!: number
+  private payment_date!: Date
   private created_at!: Date
   private update_at!: Date
 
@@ -19,20 +19,20 @@ class Cart extends Model {
           allowNull: false,
           primaryKey: true
         },
-        uid: {
+        oid: {
           type: DataTypes.STRING,
           allowNull: false
         },
-        tid: {
-          type: DataTypes.STRING,
+        payment_method: {
+          type: DataTypes.ENUM(PaymentMethod.BankTransfer, PaymentMethod.VNPAY, PaymentMethod.VNPAYQR),
+          defaultValue: PaymentMethod.VNPAY
+        },
+        total_price: {
+          type: DataTypes.DOUBLE,
           allowNull: false
         },
-        quantity: {
-          type: DataTypes.INTEGER,
-          allowNull: false
-        },
-        ticket_usage_date: {
-          type: DataTypes.DATEONLY,
+        payment_date: {
+          type: DataTypes.DATE,
           allowNull: false
         },
         created_at: {
@@ -47,17 +47,16 @@ class Cart extends Model {
       },
       {
         sequelize,
-        modelName: 'Cart',
+        modelName: 'Payment',
         timestamps: true,
         underscored: true,
-        tableName: 'carts',
+        tableName: 'payments',
         createdAt: 'created_at',
         updatedAt: 'updated_at'
       }
     )
-    this.belongsTo(User, { foreignKey: 'uid', as: 'users' })
-    this.belongsTo(Ticket, { foreignKey: 'tid', as: 'tickets' })
+    this.belongsTo(Order, { foreignKey: 'oid', as: 'orders' })
   }
 }
 
-export default Cart
+export default Payment

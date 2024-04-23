@@ -5,7 +5,13 @@ export interface CreateTicketReqBody {
   price: number
   day_of_week: string
   short_description: string
-  description: string
+  // description: string
+  overview: string
+  included_items: string
+  meeting_point: string
+  expectations: string
+  additional_info: string
+  cancellation_policy: string
   color: string
   card_type: string
   date_start: Date
@@ -20,7 +26,13 @@ export interface UpdateTicketReqBody {
   price?: number
   day_of_week?: string
   short_description?: string
-  description?: string
+  overview?: string
+  included_items?: string
+  meeting_point?: string
+  expectations?: string
+  additional_info?: string
+  cancellation_policy?: string
+  // description?: string
   color?: string
   card_type?: string
   date_start?: Date

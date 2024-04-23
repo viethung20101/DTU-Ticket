@@ -48,14 +48,12 @@ class GroupTicket extends Model {
           allowNull: false
         },
         activated: {
-          type: DataTypes.ENUM,
-          values: ['Activated', 'NotActivated'],
-          defaultValue: 'Activated'
+          type: DataTypes.ENUM(ActivatedStatus.Activated, ActivatedStatus.NotActivated),
+          defaultValue: ActivatedStatus.Activated
         },
         shown: {
-          type: DataTypes.ENUM,
-          values: ['Shown', 'NotShown'],
-          defaultValue: 'Shown'
+          type: DataTypes.ENUM(ShownStatus.Shown, ShownStatus.NotShown),
+          defaultValue: ShownStatus.Shown
         },
         note: {
           type: DataTypes.STRING,

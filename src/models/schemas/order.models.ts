@@ -1,13 +1,14 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
 import User from './user.models'
-import Ticket from './ticket.models'
+import { OrderStatus } from '~/constants/enums'
 
-class Cart extends Model {
+class Order extends Model {
   private _id!: string
   private uid!: string
-  private tid!: string
-  private quantity!: number
-  private ticket_usage_date!: Date
+  private total_ticket!: number
+  private total_price!: number
+  private date_order!: Date
+  private status!: OrderStatus
   private created_at!: Date
   private update_at!: Date
 
@@ -23,17 +24,21 @@ class Cart extends Model {
           type: DataTypes.STRING,
           allowNull: false
         },
-        tid: {
-          type: DataTypes.STRING,
-          allowNull: false
-        },
-        quantity: {
+        total_ticket: {
           type: DataTypes.INTEGER,
-          allowNull: false
+          allowNull: true
         },
-        ticket_usage_date: {
-          type: DataTypes.DATEONLY,
-          allowNull: false
+        total_price: {
+          type: DataTypes.DOUBLE,
+          allowNull: true
+        },
+        date_order: {
+          type: DataTypes.DATE,
+          allowNull: true
+        },
+        status: {
+          type: DataTypes.ENUM(OrderStatus.Paid, OrderStatus.Unpaid, OrderStatus.Canceled),
+          defaultValue: OrderStatus.Unpaid
         },
         created_at: {
           type: DataTypes.DATE,
@@ -47,17 +52,16 @@ class Cart extends Model {
       },
       {
         sequelize,
-        modelName: 'Cart',
+        modelName: 'Order',
         timestamps: true,
         underscored: true,
-        tableName: 'carts',
+        tableName: 'orders',
         createdAt: 'created_at',
         updatedAt: 'updated_at'
       }
     )
     this.belongsTo(User, { foreignKey: 'uid', as: 'users' })
-    this.belongsTo(Ticket, { foreignKey: 'tid', as: 'tickets' })
   }
 }
 
-export default Cart
+export default Order
