@@ -1,13 +1,12 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
-import User from './user.models'
 import Ticket from './ticket.models'
+import { MediaType } from '~/constants/enums'
 
-class Cart extends Model {
+class Media extends Model {
   private _id!: string
-  private uid!: string
   private tid!: string
-  private quantity!: number
-  private ticket_usage_date!: Date
+  private url!: string
+  private type!: MediaType
   private created_at!: Date
   private update_at!: Date
 
@@ -19,21 +18,17 @@ class Cart extends Model {
           allowNull: false,
           primaryKey: true
         },
-        uid: {
-          type: DataTypes.STRING,
-          allowNull: false
-        },
         tid: {
           type: DataTypes.STRING,
           allowNull: false
         },
-        quantity: {
-          type: DataTypes.INTEGER,
+        url: {
+          type: DataTypes.STRING,
           allowNull: false
         },
-        ticket_usage_date: {
-          type: DataTypes.DATEONLY,
-          allowNull: false
+        type: {
+          type: DataTypes.ENUM(MediaType.Image, MediaType.Video),
+          defaultValue: MediaType.Image
         },
         created_at: {
           type: DataTypes.DATE,
@@ -47,17 +42,16 @@ class Cart extends Model {
       },
       {
         sequelize,
-        modelName: 'Cart',
+        modelName: 'Media',
         timestamps: true,
         underscored: true,
-        tableName: 'carts',
+        tableName: 'medias',
         createdAt: 'created_at',
         updatedAt: 'updated_at'
       }
     )
-    this.belongsTo(User, { foreignKey: 'uid', as: 'users' })
     this.belongsTo(Ticket, { foreignKey: 'tid', as: 'tickets' })
   }
 }
 
-export default Cart
+export default Media

@@ -1,13 +1,17 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
+import { ActivatedStatus, ShownStatus } from '~/constants/enums'
 import User from './user.models'
 import Ticket from './ticket.models'
 
-class Cart extends Model {
+class Review extends Model {
   private _id!: string
   private uid!: string
   private tid!: string
-  private quantity!: number
-  private ticket_usage_date!: Date
+  private rating!: number
+  private comment!: Text
+  private date!: Date
+  private activated!: ActivatedStatus
+  private shown!: ShownStatus
   private created_at!: Date
   private update_at!: Date
 
@@ -27,13 +31,25 @@ class Cart extends Model {
           type: DataTypes.STRING,
           allowNull: false
         },
-        quantity: {
+        rating: {
           type: DataTypes.INTEGER,
           allowNull: false
         },
-        ticket_usage_date: {
-          type: DataTypes.DATEONLY,
+        comment: {
+          type: DataTypes.TEXT,
+          allowNull: true
+        },
+        date: {
+          type: DataTypes.DATE,
           allowNull: false
+        },
+        activated: {
+          type: DataTypes.ENUM(ActivatedStatus.Activated, ActivatedStatus.NotActivated),
+          defaultValue: ActivatedStatus.Activated
+        },
+        shown: {
+          type: DataTypes.ENUM(ShownStatus.Shown, ShownStatus.NotShown),
+          defaultValue: ShownStatus.Shown
         },
         created_at: {
           type: DataTypes.DATE,
@@ -47,10 +63,10 @@ class Cart extends Model {
       },
       {
         sequelize,
-        modelName: 'Cart',
+        modelName: 'Review',
         timestamps: true,
         underscored: true,
-        tableName: 'carts',
+        tableName: 'reviews',
         createdAt: 'created_at',
         updatedAt: 'updated_at'
       }
@@ -60,4 +76,4 @@ class Cart extends Model {
   }
 }
 
-export default Cart
+export default Review

@@ -214,7 +214,10 @@ class UsersService {
           verify: UserVerifyStatus.Verified,
           role
         }),
-        User.update({ email_verify_token: '', updated_at: new Date(), verify: 'Verified' }, { where: { id: user_id } })
+        User.update(
+          { email_verify_token: '', updated_at: new Date(), verify: UserVerifyStatus.Verified },
+          { where: { id: user_id } }
+        )
       ])
       const [access_token, refresh_token] = token
       await RefreshToken.create({
@@ -290,7 +293,7 @@ class UsersService {
         attributes: { exclude: ['password', 'email_verify_token', 'forgot_password_token'] },
         where: {
           role: {
-            [Op.or]: ['Admin', 'User']
+            [Op.or]: [RoleType.Admin, RoleType.User]
           }
         },
         order: [['_id', 'ASC']]

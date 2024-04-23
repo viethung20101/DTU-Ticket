@@ -11,7 +11,13 @@ class Ticket extends Model {
   private price!: number
   private day_of_week!: string
   private short_description!: Text
-  private description!: Text
+  // private description!: Text
+  private overview!: Text
+  private included_items!: Text
+  private meeting_point!: Text
+  private expectations!: Text
+  private additional_info!: Text
+  private cancellation_policy!: Text
   private color!: string
   private card_type!: string
   private date_start!: Date
@@ -54,9 +60,39 @@ class Ticket extends Model {
           type: DataTypes.TEXT,
           allowNull: false
         },
-        description: {
+        // description: {
+        //   type: DataTypes.TEXT,
+        //   allowNull: false
+        // },
+        overview: {
           type: DataTypes.TEXT,
-          allowNull: false
+          allowNull: true,
+          comment: 'Tổng quan về tour'
+        },
+        included_items: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+          comment: 'Các dịch vụ và tiện ích bao gồm trong tour'
+        },
+        meeting_point: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+          comment: 'Điểm hẹn và đón khách'
+        },
+        expectations: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+          comment: 'Những điều du khách có thể mong đợi từ tour'
+        },
+        additional_info: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+          comment: 'Thông tin bổ sung về tour'
+        },
+        cancellation_policy: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+          comment: 'Chính sách hủy tour'
         },
         color: {
           type: DataTypes.STRING,
@@ -75,14 +111,12 @@ class Ticket extends Model {
           allowNull: true
         },
         activated: {
-          type: DataTypes.ENUM,
-          values: ['Activated', 'NotActivated'],
-          defaultValue: 'Activated'
+          type: DataTypes.ENUM(ActivatedStatus.Activated, ActivatedStatus.NotActivated),
+          defaultValue: ActivatedStatus.Activated
         },
         shown: {
-          type: DataTypes.ENUM,
-          values: ['Shown', 'NotShown'],
-          defaultValue: 'Shown'
+          type: DataTypes.ENUM(ShownStatus.Shown, ShownStatus.NotShown),
+          defaultValue: ShownStatus.Shown
         },
         note: {
           type: DataTypes.STRING,

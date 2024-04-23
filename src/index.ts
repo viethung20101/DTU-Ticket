@@ -10,6 +10,9 @@ import { accessTokenValidator, verifiedUserValidator } from './middlewares/users
 import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/file'
 import staticRouter from './routes/static.routes'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
+import { io } from 'socket.io-client'
 
 config()
 
@@ -23,6 +26,8 @@ db.sequelize
   })
 
 const app = express()
+
+const httpServer = createServer(app)
 
 initFolder()
 
@@ -46,6 +51,31 @@ app.use('/api/v1/static', staticRouter)
 
 app.use(defaultErrorHandler)
 
-app.listen(process.env.PORT, () => {
+const sio = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000'
+  }
+})
+
+const pythonSocket = io('http://localhost:6969')
+
+sio.on('connection', (socket) => {
+  console.log(`User ${socket.id} connected`)
+
+  socket.on('message', (data) => {
+    console.log('aaaa')
+    pythonSocket.emit('message', { message: 'test' })
+  })
+
+  pythonSocket.on('message', (data) => {
+    console.log('Received answer from Python chatbot:', data.message)
+  })
+
+  socket.on('disconnect', () => {
+    console.log(`User ${socket.id} disconnected`)
+  })
+})
+
+httpServer.listen(process.env.PORT, () => {
   console.log(`App listening on port ${process.env.PORT}`)
 })

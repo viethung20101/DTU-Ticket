@@ -13,6 +13,7 @@ import usersService from '~/services/users.services'
 import User from '~/models/schemas/user.models'
 import USERS_MESSAGES from '~/constants/messages'
 import HTTP_STATUS from '~/constants/httpStatus'
+import { UserVerifyStatus } from '~/constants/enums'
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   const user = req.user as User
@@ -92,7 +93,7 @@ export const emailVerifyController = async (req: Request, res: Response) => {
       message: USERS_MESSAGES.USER_NOT_FOUND
     })
   }
-  if (user.dataValues.email_verify_token == null || user.dataValues.verify == 'Verified') {
+  if (user.dataValues.email_verify_token == null || user.dataValues.verify == UserVerifyStatus.Verified) {
     return res.json({
       message: USERS_MESSAGES.EMAIL_ALREADY_VERIFIED_BEFORE
     })
@@ -112,7 +113,7 @@ export const resendVerifyEmailController = async (req: Request, res: Response) =
       message: USERS_MESSAGES.USER_NOT_FOUND
     })
   }
-  if (user.dataValues.verify == 'Verified') {
+  if (user.dataValues.verify == UserVerifyStatus.Verified) {
     return res.json({
       message: USERS_MESSAGES.EMAIL_ALREADY_VERIFIED_BEFORE
     })

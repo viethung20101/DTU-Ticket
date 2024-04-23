@@ -1,33 +1,45 @@
 export enum RoleType {
-  SuperAdmin,
-  Admin,
-  User
+  SuperAdmin = 'SuperAdmin',
+  Admin = 'Admin',
+  User = 'User'
 }
 
 export enum UserVerifyStatus {
-  Unverified,
-  Verified,
-  Banned
+  Unverified = 'Unverified',
+  Verified = 'Verified',
+  Banned = 'Banned'
 }
 
 export enum TokenType {
-  AccessToken,
-  RefreshToken,
-  ForgotPasswordToken,
-  EmailVerifyToken
+  AccessToken = 'AccessToken',
+  RefreshToken = 'RefreshToken',
+  ForgotPasswordToken = 'ForgotPasswordToken',
+  EmailVerifyToken = 'EmailVerifyToken'
 }
 
 export enum ActivatedStatus {
-  Activated,
-  NotActivated
+  Activated = 'Activated,',
+  NotActivated = 'NotActivated'
 }
 
 export enum ShownStatus {
-  Shown,
-  NotShown
+  Shown = 'Shown',
+  NotShown = 'NotShown'
 }
 
 export enum MediaType {
-  Image,
-  Video
+  Image = 'Image',
+  Video = 'Video'
+}
+
+export enum OrderStatus {
+  Paid = 'Paid',
+  Unpaid = 'Unpaid',
+  Canceled = 'Canceled'
+}
+
+export enum PaymentMethod {
+  BankTransfer = 'BankTransfer',
+  VNPAY = 'VNPAY',
+  VNPAYQR = 'VNPAY-QR'
 }

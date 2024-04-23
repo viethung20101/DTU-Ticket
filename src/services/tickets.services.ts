@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
+import { ShownStatus } from '~/constants/enums'
 import { CreateTicketReqBody, UpdateTicketReqBody } from '~/models/Requests/ticket.requests'
 import GroupTicket from '~/models/schemas/groupTicket.models'
 import Ticket from '~/models/schemas/ticket.models'
@@ -27,12 +28,12 @@ class TicketsService {
             attributes: ['name'],
             as: 'group_tickets',
             where: {
-              shown: 'Shown'
+              shown: ShownStatus.Shown
             }
           }
         ],
         where: {
-          shown: 'Shown'
+          shown: ShownStatus.Shown
         },
         limit,
         offset
@@ -61,12 +62,12 @@ class TicketsService {
             attributes: ['name'],
             as: 'group_tickets',
             where: {
-              shown: 'Shown'
+              shown: ShownStatus.Shown
             }
           }
         ],
         where: {
-          shown: 'Shown'
+          shown: ShownStatus.Shown
         }
       })
       return {

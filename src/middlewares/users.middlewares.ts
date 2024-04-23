@@ -11,6 +11,7 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import { TokenPayload } from '~/models/Requests/user.requests'
+import { UserVerifyStatus } from '~/constants/enums'
 
 const passwordSchema: ParamSchema = {
   notEmpty: {
@@ -389,7 +390,7 @@ export const resetPasswordValidator = validate(
 
 export const verifiedUserValidator = (req: Request, res: Response, next: NextFunction) => {
   const { verify } = req.decoded_authorization as TokenPayload
-  if (verify != 'Verified') {
+  if (verify != UserVerifyStatus.Verified) {
     return next(
       new ErrorWithStatus({
         message: USERS_MESSAGES.EMAIL_NOT_VERIFIED,
