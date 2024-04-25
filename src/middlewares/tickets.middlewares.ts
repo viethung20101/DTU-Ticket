@@ -87,6 +87,15 @@ const shortDescriptionSchema: ParamSchema = {
   trim: true
 }
 
+const defaultDailyQuotaSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.DEFAULT_DAILY_QUOTA_IS_REQUIRED
+  },
+  isNumeric: {
+    errorMessage: USERS_MESSAGES.DEFAULT_DAILY_QUOTA_MUST_BE_A_NUMERIC
+  }
+}
+
 // const descriptionSchema: ParamSchema = {
 //   notEmpty: {
 //     errorMessage: USERS_MESSAGES.DESCRIPTION_IS_REQUIRED
@@ -131,7 +140,7 @@ const dateEndSchema: ParamSchema = {
     errorMessage: USERS_MESSAGES.INCORRECT_DATE_FORMAT
   },
   custom: {
-    options: (value, { req }) => {
+    options: async (value, { req }) => {
       const startDate = new Date(req.body.date_start)
       const endDate = new Date(value)
       if (endDate <= startDate) {
@@ -150,6 +159,7 @@ export const createTicketValidator = validate(
       price: priceSchema,
       day_of_week: dayOfWeekSchema,
       short_description: shortDescriptionSchema,
+      default_daily_quota: defaultDailyQuotaSchema,
       // description: descriptionSchema,
       color: colorSchema,
       card_type: cardTypeSchema,
@@ -187,6 +197,11 @@ export const updateTicketValidator = validate(
       short_description: {
         optional: true,
         ...shortDescriptionSchema,
+        notEmpty: undefined
+      },
+      default_daily_quota: {
+        optional: true,
+        ...defaultDailyQuotaSchema,
         notEmpty: undefined
       },
       // description: {

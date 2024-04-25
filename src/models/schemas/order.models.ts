@@ -3,14 +3,14 @@ import User from './user.models'
 import { OrderStatus } from '~/constants/enums'
 
 class Order extends Model {
-  private _id!: string
-  private uid!: string
-  private total_ticket!: number
-  private total_price!: number
-  private date_order!: Date
-  private status!: OrderStatus
-  private created_at!: Date
-  private update_at!: Date
+  public _id!: string
+  public uid!: string
+  public total_ticket!: number
+  public total_price!: number
+  public date_order!: Date
+  public status!: OrderStatus
+  public created_at!: Date
+  public update_at!: Date
 
   public static initialize(sequelize: Sequelize) {
     this.init(

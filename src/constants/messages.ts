@@ -74,7 +74,15 @@ const USERS_MESSAGES = {
   ID_MUST_BE_A_STRING: ' Id must be a string',
   GET_TICKET_DETAILS_SUCCESS: 'Get ticket details success',
   REFRESH_TOKEN_SUCCESS: 'Refresh token success',
-  GET_ALL_USERS_SUCCESS: 'Get all users success'
+  GET_ALL_USERS_SUCCESS: 'Get all users success',
+  DEFAULT_DAILY_QUOTA_IS_REQUIRED: 'Default daily quota is required',
+  DEFAULT_DAILY_QUOTA_MUST_BE_A_NUMERIC: 'Default daily quota must be a numeric',
+  QUANTITY_IS_REQUIRED: 'Quantity is required',
+  QUANTITY_MUST_BE_A_NUMERIC: 'Quantity must be a numeric',
+  ORDER_DETAILS_MUST_BE_AN_ARRAY: 'Order details must be an array',
+  ORDER_DETAILS_ARE_REQUIRED: 'Order details are required',
+  TICKET_NOT_INSUFFICIENT_QUANTITY: 'Ticket not insufficient quantity',
+  TICKET_USE_DATE_IS_INVALID: 'Ticket use date is invalid'
 } as const
 
 export default USERS_MESSAGES

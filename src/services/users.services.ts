@@ -7,7 +7,7 @@ import { signToken } from '~/utils/jwt'
 import RefreshToken from '~/models/schemas/refreshToken.models'
 import { v4 as uuidv4 } from 'uuid'
 import { sendVerifyEmail } from '~/utils/email'
-import { Op, where } from 'sequelize'
+import { Op } from 'sequelize'
 
 class UsersService {
   private signAccessToken({ user_id, verify, role }: { user_id: string; verify: UserVerifyStatus; role: RoleType }) {
@@ -96,7 +96,7 @@ class UsersService {
         email_verify_token: email_verify_token,
         password: hashPassword(payload.password),
         date_of_birth: new Date(payload.date_of_birth),
-        role: 'User'
+        role: RoleType.User
       })
       // const user_id = result.dataValues._id.toString()
       const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
@@ -120,7 +120,7 @@ class UsersService {
       return {
         access_token,
         refresh_token,
-        role: 'User'
+        role: RoleType.User
       }
     } catch (error) {
       throw new Error('Error while registering user: ' + error)

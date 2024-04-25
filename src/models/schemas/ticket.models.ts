@@ -4,29 +4,32 @@ import GroupTicket from './groupTicket.models'
 import { Media } from '../others'
 
 class Ticket extends Model {
-  private _id!: string
-  private code_ticket!: string
-  private gid!: string
-  private name!: string
-  private price!: number
-  private day_of_week!: string
-  private short_description!: Text
-  // private description!: Text
-  private overview!: Text
-  private included_items!: Text
-  private meeting_point!: Text
-  private expectations!: Text
-  private additional_info!: Text
-  private cancellation_policy!: Text
-  private color!: string
-  private card_type!: string
-  private date_start!: Date
-  private date_end!: Date
-  private activated!: ActivatedStatus
-  private shown!: ShownStatus
-  private note!: string
-  private created_at!: Date
-  private update_at!: Date
+  public _id!: string
+  public code_ticket!: string
+  public gid!: string
+  public name!: string
+  public price!: number
+  public day_of_week!: string
+  public default_daily_quota!: number
+  public daily_quota!: number
+  public last_reset_date!: Date
+  public short_description!: Text
+  // public description!: Text
+  public overview!: Text
+  public included_items!: Text
+  public meeting_point!: Text
+  public expectations!: Text
+  public additional_info!: Text
+  public cancellation_policy!: Text
+  public color!: string
+  public card_type!: string
+  public date_start!: Date
+  public date_end!: Date
+  public activated!: ActivatedStatus
+  public shown!: ShownStatus
+  public note!: string
+  public created_at!: Date
+  public update_at!: Date
 
   public static initialize(sequelize: Sequelize) {
     this.init(
@@ -54,6 +57,18 @@ class Ticket extends Model {
         },
         day_of_week: {
           type: DataTypes.STRING,
+          allowNull: false
+        },
+        default_daily_quota: {
+          type: DataTypes.INTEGER,
+          allowNull: false
+        },
+        daily_quota: {
+          type: DataTypes.INTEGER,
+          allowNull: false
+        },
+        last_reset_date: {
+          type: DataTypes.DATE,
           allowNull: false
         },
         short_description: {
