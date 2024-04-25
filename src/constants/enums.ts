@@ -18,7 +18,7 @@ export enum TokenType {
 }
 
 export enum ActivatedStatus {
-  Activated = 'Activated,',
+  Activated = 'Activated',
   NotActivated = 'NotActivated'
 }
 
@@ -42,4 +42,10 @@ export enum PaymentMethod {
   BankTransfer = 'BankTransfer',
   VNPAY = 'VNPAY',
   VNPAYQR = 'VNPAY-QR'
+}
+
+export enum TicketUsageStatus {
+  Used = 'Used',
+  Unused = 'Unused',
+  Expired = 'Expired'
 }

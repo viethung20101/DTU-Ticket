@@ -7,8 +7,8 @@ class User extends Model {
   public email!: string
   public date_of_birth!: Date
   public password!: string
-  public email_verify_token!: string
-  public forgot_password_token!: string
+  public email_verify_token!: Text
+  public forgot_password_token!: Text
   public role!: RoleType
   public verify!: UserVerifyStatus
   public created_at!: Date
@@ -42,10 +42,10 @@ class User extends Model {
           allowNull: false
         },
         email_verify_token: {
-          type: DataTypes.STRING
+          type: DataTypes.TEXT
         },
         forgot_password_token: {
-          type: DataTypes.STRING
+          type: DataTypes.TEXT
         },
         role: {
           type: DataTypes.ENUM(RoleType.SuperAdmin, RoleType.Admin, RoleType.User),

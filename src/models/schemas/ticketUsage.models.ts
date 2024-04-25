@@ -1,13 +1,14 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
 import User from './user.models'
 import Ticket from './ticket.models'
+import { TicketUsageStatus } from '~/constants/enums'
 
-class Cart extends Model {
+class TicketUsage extends Model {
   private _id!: string
   private uid!: string
   private tid!: string
-  private quantity!: number
-  private ticket_usage_date!: Date
+  private usage_date!: Date
+  private status!: TicketUsageStatus
   private created_at!: Date
   private update_at!: Date
 
@@ -27,13 +28,13 @@ class Cart extends Model {
           type: DataTypes.STRING,
           allowNull: false
         },
-        quantity: {
-          type: DataTypes.INTEGER,
-          allowNull: false
-        },
-        ticket_usage_date: {
+        usage_date: {
           type: DataTypes.DATEONLY,
           allowNull: false
+        },
+        status: {
+          type: DataTypes.ENUM(TicketUsageStatus.Used, TicketUsageStatus.Unused, TicketUsageStatus.Expired),
+          defaultValue: TicketUsageStatus.Unused
         },
         created_at: {
           type: DataTypes.DATE,
@@ -47,10 +48,10 @@ class Cart extends Model {
       },
       {
         sequelize,
-        modelName: 'Cart',
+        modelName: 'TicketUsage',
         timestamps: true,
         underscored: true,
-        tableName: 'carts',
+        tableName: 'ticket_usages',
         createdAt: 'created_at',
         updatedAt: 'updated_at'
       }
@@ -60,4 +61,4 @@ class Cart extends Model {
   }
 }
 
-export default Cart
+export default TicketUsage

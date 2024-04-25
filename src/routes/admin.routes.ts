@@ -74,6 +74,7 @@ adminRouter.patch(
     'name',
     'price',
     'day_of_week',
+    'default_daily_quota',
     'short_description',
     'overview',
     'included_items',

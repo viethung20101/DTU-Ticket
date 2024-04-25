@@ -3,14 +3,14 @@ import Order from './order.models'
 import Ticket from './ticket.models'
 
 class OrderDetails extends Model {
-  private _id!: string
-  private oid!: string
-  private tid!: string
-  private quantity!: number
-  private price!: number
-  private ticket_usage_date!: Date
-  private created_at!: Date
-  private update_at!: Date
+  public _id!: string
+  public oid!: string
+  public tid!: string
+  public quantity!: number
+  public price!: number
+  public usage_date!: Date
+  public created_at!: Date
+  public update_at!: Date
 
   public static initialize(sequelize: Sequelize) {
     this.init(
@@ -36,7 +36,7 @@ class OrderDetails extends Model {
           type: DataTypes.DOUBLE,
           allowNull: false
         },
-        ticket_usage_date: {
+        usage_date: {
           type: DataTypes.DATEONLY,
           allowNull: false
         },
