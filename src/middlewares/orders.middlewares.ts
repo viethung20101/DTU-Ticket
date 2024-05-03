@@ -1,6 +1,6 @@
 import { ParamSchema, checkSchema } from 'express-validator'
 import { validate } from '~/utils/validation'
-import USERS_MESSAGES from '~/constants/messages'
+import { USERS_MESSAGES } from '~/constants/messages'
 import ticketsService from '~/services/tickets.services'
 
 export const createOrderValidator = validate(

@@ -12,8 +12,9 @@ import staticRouter from './routes/static.routes'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import { io } from 'socket.io-client'
-import { startDailyResetJob } from './utils/job'
+import { startServerJobs, startDailyResetJob } from './utils/job'
 import ordersRouter from './routes/orders.routes'
+import paymentsRouter from './routes/payments.routes'
 
 config()
 
@@ -31,6 +32,7 @@ const app = express()
 const httpServer = createServer(app)
 
 initFolder()
+startServerJobs()
 startDailyResetJob()
 
 app.use(express.json())
@@ -51,6 +53,8 @@ app.use('/api/v1/static', staticRouter)
 
 app.use('/api/v1/orders', accessTokenValidator, verifiedUserValidator, ordersRouter)
 
+app.use('/api/v1/payments', paymentsRouter)
+
 app.use(defaultErrorHandler)
 
 const sio = new Server(httpServer, {
@@ -59,23 +63,23 @@ const sio = new Server(httpServer, {
   }
 })
 
-const pythonSocket = io('http://localhost:6969')
+// const pythonSocket = io('http://localhost:6969')
+
+// pythonSocket.on('message', (data) => {
+//   console.log(data.memory)
+//   sio.to(data.senderId).emit('message', { message: data.message })
+// })
 
 sio.on('connection', (socket) => {
-  console.log(`User ${socket.id} connected`)
-
-  socket.on('message', (data) => {
-    console.log('aaaa')
-    pythonSocket.emit('message', { message: 'test' })
-  })
-
-  pythonSocket.on('message', (data) => {
-    console.log('Received answer from Python chatbot:', data.message)
-  })
-
-  socket.on('disconnect', () => {
-    console.log(`User ${socket.id} disconnected`)
-  })
+  // console.log(`User ${socket.id} connected`)
+  // socket.on('message', (data) => {
+  //   console.log('Da nhan')
+  //   console.log(data)
+  //   pythonSocket.emit('message', { message: data.message, senderId: socket.id })
+  // })
+  // socket.on('disconnect', () => {
+  //   console.log(`User ${socket.id} disconnected`)
+  // })
 })
 
 httpServer.listen(process.env.PORT, () => {

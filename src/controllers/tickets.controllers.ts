@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
-import USERS_MESSAGES from '~/constants/messages'
+import { USERS_MESSAGES } from '~/constants/messages'
 import ticketsService from '~/services/tickets.services'
 import { CreateTicketReqBody, UpdateTicketReqBody } from '~/models/Requests/ticket.requests'
 

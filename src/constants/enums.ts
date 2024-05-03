@@ -39,9 +39,15 @@ export enum OrderStatus {
 }
 
 export enum PaymentMethod {
-  BankTransfer = 'BankTransfer',
-  VNPAY = 'VNPAY',
-  VNPAYQR = 'VNPAY-QR'
+  VNBANK = 'VNBANK',
+  VNPAYQR = 'VNPAYQR',
+  INTCARD = 'INTCARD'
+}
+
+export enum PaymentStatus {
+  Init = 'Init',
+  Success = 'Success',
+  Failed = 'Failed'
 }
 
 export enum TicketUsageStatus {

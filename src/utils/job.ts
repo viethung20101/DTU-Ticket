@@ -10,3 +10,11 @@ export const startDailyResetJob = () => {
     }
   })
 }
+
+export const startServerJobs = () => {
+  try {
+    ticketsService.updateDailyQuota()
+  } catch (error) {
+    console.log('Error running daily reset job:', error)
+  }
+}
