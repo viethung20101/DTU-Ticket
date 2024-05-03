@@ -1,6 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
 import Order from './order.models'
-import { PaymentMethod } from '~/constants/enums'
+import { PaymentMethod, PaymentStatus } from '~/constants/enums'
 
 class Payment extends Model {
   private _id!: string
@@ -24,8 +24,8 @@ class Payment extends Model {
           allowNull: false
         },
         payment_method: {
-          type: DataTypes.ENUM(PaymentMethod.BankTransfer, PaymentMethod.VNPAY, PaymentMethod.VNPAYQR),
-          defaultValue: PaymentMethod.VNPAY
+          type: DataTypes.ENUM(PaymentMethod.VNBANK, PaymentMethod.VNPAYQR, PaymentMethod.INTCARD),
+          allowNull: false
         },
         total_price: {
           type: DataTypes.DOUBLE,
@@ -34,6 +34,10 @@ class Payment extends Model {
         payment_date: {
           type: DataTypes.DATE,
           allowNull: false
+        },
+        payment_status: {
+          type: DataTypes.ENUM(PaymentStatus.Init, PaymentStatus.Success, PaymentStatus.Failed),
+          defaultValue: PaymentStatus.Init
         },
         created_at: {
           type: DataTypes.DATE,

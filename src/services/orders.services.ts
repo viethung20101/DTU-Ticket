@@ -5,10 +5,20 @@ import db from './database.services'
 import Order from '~/models/schemas/order.models'
 import { OrderStatus } from '~/constants/enums'
 import { Op, Sequelize, where } from 'sequelize'
-import USERS_MESSAGES from '~/constants/messages'
+import { USERS_MESSAGES } from '~/constants/messages'
 import { CreateOrderDetailsReqBody } from '~/models/Requests/order.requests'
 
 class OrdersService {
+  async getOrder(_id: string) {
+    const order = await Order.findByPk(_id)
+    return order
+  }
+
+  async checkOrderExist(_id: string) {
+    const order = await Order.findOne({ where: { _id: _id, status: OrderStatus.Unpaid } })
+    return order
+  }
+
   private isToday(usage_date: Date | string) {
     if (typeof usage_date === 'string') {
       usage_date = new Date(usage_date)

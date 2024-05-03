@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
-import USERS_MESSAGES from '~/constants/messages'
+import { USERS_MESSAGES } from '~/constants/messages'
 import { SetRoleReqBody } from '~/models/Requests/admin.requests'
 import usersService from '~/services/users.services'
 

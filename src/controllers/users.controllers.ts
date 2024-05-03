@@ -11,7 +11,7 @@ import {
 } from '~/models/Requests/user.requests'
 import usersService from '~/services/users.services'
 import User from '~/models/schemas/user.models'
-import USERS_MESSAGES from '~/constants/messages'
+import { USERS_MESSAGES } from '~/constants/messages'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { UserVerifyStatus } from '~/constants/enums'
 

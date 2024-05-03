@@ -1,4 +1,4 @@
-const USERS_MESSAGES = {
+export const USERS_MESSAGES = {
   VALIDATION_ERROR: 'Validation error',
   UNAUTHORIZED: 'Unauthorized',
   NAME_IS_REQUIRED: 'Name is required',
@@ -85,4 +85,14 @@ const USERS_MESSAGES = {
   TICKET_USE_DATE_IS_INVALID: 'Ticket use date is invalid'
 } as const
 
-export default USERS_MESSAGES
+export const PAYMENTS_MESSAGES = {
+  ORDER_ID_MUST_BE_A_STRING: 'Order id must be a string',
+  ORDER_ID_IS_REQUIRED: 'Order id is required',
+  ORDER_NOT_FOUND: 'Order not found',
+  PAYMENT_METHOD_MUST_BE_A_STRING: 'Payment method must be a string',
+  PAYMENT_METHOD_IS_REQUIRED: 'Payment method is required',
+  PAYMENT_METHOD_IS_INVALID: 'Payment method is invalid',
+  LANGUAGE_MUST_BE_A_STRING: 'Language must be a string',
+  LANGUAGE_IS_REQUIRED: 'Language is required',
+  LANGUAGE_IS_INVALID: 'Language is invalid'
+} as const
