@@ -1,11 +1,16 @@
 import { Request, Response, NextFunction } from 'express'
 import { File } from 'formidable'
 import fs from 'fs'
-import { UPLOAD_TEMP_DIR } from '~/constants/dir'
+import { UPLOAD_TEMP_DIR, UPLOAD_TICKET_DIR } from '~/constants/dir'
 
 export const initFolder = () => {
   if (!fs.existsSync(UPLOAD_TEMP_DIR)) {
     fs.mkdirSync(UPLOAD_TEMP_DIR, {
+      recursive: true
+    })
+  }
+  if (!fs.existsSync(UPLOAD_TICKET_DIR)) {
+    fs.mkdirSync(UPLOAD_TICKET_DIR, {
       recursive: true
     })
   }
@@ -15,6 +20,7 @@ export const handleUploadImage = async (req: Request) => {
   const formidable = (await import('formidable')).default
   const form = formidable({
     uploadDir: UPLOAD_TEMP_DIR,
+    multiples: true,
     maxFiles: 10,
     keepExtensions: true,
     maxFieldsSize: 300 * 1024,

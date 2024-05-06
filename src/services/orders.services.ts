@@ -4,9 +4,11 @@ import Ticket from '~/models/schemas/ticket.models'
 import db from './database.services'
 import Order from '~/models/schemas/order.models'
 import { OrderStatus } from '~/constants/enums'
-import { Op, Sequelize, where } from 'sequelize'
+import { Op, Sequelize, json, where } from 'sequelize'
 import { USERS_MESSAGES } from '~/constants/messages'
 import { CreateOrderDetailsReqBody } from '~/models/Requests/order.requests'
+import { sendVerifyEmail } from '~/utils/email'
+import usersService from './users.services'
 
 class OrdersService {
   async getOrder(_id: string) {
@@ -43,6 +45,40 @@ class OrdersService {
       return false
     }
     return true
+  }
+
+  private formatPrice(price: number) {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
+  }
+
+  private async sendMail(user_id: string, order_id: string) {
+    const [user, orderDetails] = await Promise.all([
+      usersService.findOneUser(user_id),
+      OrderDetails.findAll({
+        where: { oid: order_id },
+        include: [{ model: Ticket, as: 'tickets' }]
+      })
+    ])
+
+    let orderItemsHtml = ''
+    for (const detail of orderDetails) {
+      const ticket = detail.dataValues.tickets
+      orderItemsHtml += `
+      <p>${ticket.dataValues.name}</p>
+      <p>${this.formatPrice(detail.dataValues.price)} x ${detail.dataValues.quantity}</p>
+      `
+    }
+    await sendVerifyEmail(
+      user?.dataValues.email,
+      `Bạn có đơn hàng chưa được hoàn thành tại ${process.env.WEB_NAME}`,
+      `<h1>${process.env.WEB_NAME}</h1>
+      <p>Chào <b>${user?.dataValues.name}</b>,</p>
+      <p>Chúng tôi nhận thấy có một số mặt hàng được đặt trong giỏ hàng của bạn. Nếu bạn đã sẵn sàng để mua hàng, vui lòng quay trở lại với chúng tôi để hoàn thành việc thanh toán nhé.</p>
+      <h2>Thông tin đơn hàng</h2>
+      ${orderItemsHtml}
+      <p>Nếu Anh/chị có bất kỳ câu hỏi nào, xin liên hệ với chúng tôi tại <a href="mailto:viethungcvs@gmail.com">viethungcvs@gmail.com</a></p>
+      `
+    )
   }
 
   async createOrders({ user_id, orderDetails }: { user_id: string; orderDetails: Array<CreateOrderDetailsReqBody> }) {
@@ -120,8 +156,49 @@ class OrdersService {
       }
       await order.update({ total_price: totalPrice }, { transaction })
       await transaction.commit()
+      await this.sendMail(user_id, order.dataValues._id)
+      return json({
+        message: USERS_MESSAGES.CREATE_TICKET_SUCCESS,
+        order_id: order.dataValues._id
+      })
     } catch (error) {
       if (transaction) await transaction.rollback()
+      throw error
+    }
+  }
+
+  async userGetOrder({ user_id, order_id }: { user_id: string; order_id: string }) {
+    try {
+      const order = await Order.findOne({ where: { _id: order_id, uid: user_id } })
+      if (order === null) {
+        return json({
+          message: 'Order not found'
+        })
+      }
+
+      const orderDetails = await OrderDetails.findAll({
+        include: [
+          {
+            model: Order,
+            attributes: ['total_ticket', 'total_price', 'date_order', 'status'],
+            as: 'orders'
+          },
+          {
+            model: Ticket,
+            attributes: ['name'],
+            as: 'tickets'
+          }
+        ],
+        where: {
+          oid: order_id
+        }
+      })
+
+      return json({
+        data: orderDetails
+      })
+    } catch (error) {
+      console.log(error)
       throw error
     }
   }

@@ -5,6 +5,7 @@ import GroupTicket from '~/models/schemas/groupTicket.models'
 import OrderDetails from '~/models/schemas/orderDetails.models'
 import Ticket from '~/models/schemas/ticket.models'
 import { Op, Sequelize } from 'sequelize'
+import Media from '~/models/schemas/media.models'
 
 class TicketsService {
   async checkTicketExist(_id: string) {
@@ -22,8 +23,8 @@ class TicketsService {
       }
       const limit = size
       const offset = (page - 1) * size
-      const ticket = await Ticket.findAll({
-        attributes: ['id', 'name', 'price', 'day_of_week', 'short_description'],
+      const tickets = await Ticket.findAll({
+        attributes: ['_id', 'name', 'price', 'day_of_week', 'short_description'],
         include: [
           {
             model: GroupTicket,
@@ -40,13 +41,37 @@ class TicketsService {
         limit,
         offset
       })
+      const ticketArray = await Promise.all(
+        tickets.map(async (ticket) => {
+          const media = await Media.findOne({
+            attributes: ['_id', 'url', 'type'],
+            where: {
+              tid: ticket.dataValues._id
+            }
+          })
+
+          return {
+            id: ticket.dataValues._id,
+            group_ticket: ticket.dataValues.group_tickets.dataValues.name,
+            name: ticket.dataValues.name,
+            price: ticket.dataValues.price,
+            day_of_week: ticket.dataValues.day_of_week,
+            short_description: ticket.dataValues.short_description,
+            media: {
+              id: media?.dataValues._id,
+              url: media?.dataValues.url,
+              type: media?.dataValues.type
+            }
+          }
+        })
+      )
       const total_documents = await Ticket.count()
       const previous_pages = page - 1
       const next_pages = Math.ceil((total_documents - offset) / size)
       return {
         page: page,
         size: size,
-        data: ticket,
+        data: ticketArray,
         previous: previous_pages,
         next: next_pages
       }
@@ -57,23 +82,60 @@ class TicketsService {
 
   async getTicketDetails(id: string) {
     try {
-      const ticket = await Ticket.findOne({
-        include: [
-          {
-            model: GroupTicket,
-            attributes: ['name'],
-            as: 'group_tickets',
-            where: {
-              shown: ShownStatus.Shown
+      const [ticket, medias] = await Promise.all([
+        Ticket.findOne({
+          include: [
+            {
+              model: GroupTicket,
+              attributes: ['name'],
+              as: 'group_tickets',
+              where: {
+                shown: ShownStatus.Shown
+              }
             }
+          ],
+          where: {
+            _id: id,
+            shown: ShownStatus.Shown
           }
-        ],
-        where: {
-          shown: ShownStatus.Shown
-        }
-      })
+        }),
+        Media.findAll({
+          attributes: ['_id', 'url', 'type'],
+          where: {
+            tid: id
+          }
+        })
+      ])
+      const mediaArray = medias.map((media) => ({
+        id: media.dataValues._id,
+        url: media.dataValues.url,
+        type: media.dataValues.type
+      }))
       return {
-        data: ticket
+        id: ticket?.dataValues._id,
+        group_ticket: ticket?.dataValues.group_tickets.dataValues.name,
+        code_ticket: ticket?.dataValues.code_ticket,
+        gid: ticket?.dataValues.gid,
+        name: ticket?.dataValues.name,
+        price: ticket?.dataValues.price,
+        day_of_week: ticket?.dataValues.day_of_week,
+        default_daily_quota: ticket?.dataValues.default_daily_quota,
+        daily_quota: ticket?.dataValues.daily_quota,
+        last_reset_date: ticket?.dataValues.last_reset_date,
+        short_description: ticket?.dataValues.short_description,
+        overview: ticket?.dataValues.overview,
+        included_items: ticket?.dataValues.included_items,
+        meeting_point: ticket?.dataValues.meeting_point,
+        expectations: ticket?.dataValues.expectations,
+        additional_info: ticket?.dataValues.additional_info,
+        cancellation_policy: ticket?.dataValues.cancellation_policy,
+        color: ticket?.dataValues.color,
+        card_type: ticket?.dataValues.card_type,
+        date_start: ticket?.dataValues.date_start,
+        date_end: ticket?.dataValues.date_end,
+        media: mediaArray,
+        created_at: ticket?.dataValues.created_at,
+        update_at: ticket?.dataValues.update_at
       }
     } catch (error) {
       return {
