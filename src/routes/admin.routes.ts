@@ -23,6 +23,8 @@ import {
 } from '~/controllers/tickets.controllers'
 import { createTicketValidator, deleteTicketValidator, updateTicketValidator } from '~/middlewares/tickets.middlewares'
 import { UpdateTicketReqBody } from '~/models/Requests/ticket.requests'
+import { getAllPaymentsController } from '~/controllers/payments.controllers'
+import { uploadTicketImageController } from '~/controllers/medias.controllers'
 
 const adminRouter = Router()
 
@@ -63,6 +65,8 @@ adminRouter.post(
   wrapRequestHandler(createTicketsController)
 )
 
+adminRouter.post('/tickets/upload-image/:tid', wrapRequestHandler(uploadTicketImageController))
+
 adminRouter.patch(
   '/tickets/update',
   roleAdminValidator,
@@ -97,5 +101,7 @@ adminRouter.post(
   deleteTicketValidator,
   wrapRequestHandler(deleteTicketController)
 )
+
+adminRouter.get('/payments/data', roleAdminValidator, wrapRequestHandler(getAllPaymentsController))
 
 export default adminRouter

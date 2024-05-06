@@ -1,7 +1,10 @@
 import nodemailer from 'nodemailer'
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.mailtrap.io',
+  secure: false,
+  port: 2525,
+  service: 'Gmail',
   auth: {
     user: process.env.USER_MAIL,
     pass: process.env.USER_PASSWORD
@@ -47,6 +50,7 @@ export const sendVerifyEmail = (toAddress: string, subject: string, html: string
     })
     return sendEmailCommand
   } catch (error) {
+    console.log(error)
     throw new Error('Error: ' + error)
   }
 }

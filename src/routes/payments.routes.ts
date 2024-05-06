@@ -2,8 +2,8 @@ import { Router } from 'express'
 import {
   createPaymentUrlController,
   querydrController,
-  vnpayIpnController,
-  vnpayReturnController
+  vnpayIpnController
+  // vnpayReturnController
 } from '~/controllers/payments.controllers'
 import { createPaymentUrlValidator } from '~/middlewares/payments.middlewares'
 import { accessTokenValidator, verifiedUserValidator } from '~/middlewares/users.middlewares'
@@ -19,7 +19,7 @@ paymentsRouter.post(
   createPaymentUrlController
 )
 
-paymentsRouter.get('/vnpay_return', vnpayReturnController)
+// paymentsRouter.get('/vnpay_return', vnpayReturnController)
 
 paymentsRouter.get('/vnpay_ipn', vnpayIpnController)
 

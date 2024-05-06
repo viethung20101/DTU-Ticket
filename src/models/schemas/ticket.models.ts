@@ -1,7 +1,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
 import { ActivatedStatus, ShownStatus } from '~/constants/enums'
 import GroupTicket from './groupTicket.models'
-import { Media } from '../others'
+import Media from './media.models'
 
 class Ticket extends Model {
   public _id!: string

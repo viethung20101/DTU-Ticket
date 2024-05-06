@@ -94,5 +94,6 @@ export const PAYMENTS_MESSAGES = {
   PAYMENT_METHOD_IS_INVALID: 'Payment method is invalid',
   LANGUAGE_MUST_BE_A_STRING: 'Language must be a string',
   LANGUAGE_IS_REQUIRED: 'Language is required',
-  LANGUAGE_IS_INVALID: 'Language is invalid'
+  LANGUAGE_IS_INVALID: 'Language is invalid',
+  GET_ALL_PAYMENTS_SUCCESS: 'Get all payments success'
 } as const

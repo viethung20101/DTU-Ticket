@@ -15,6 +15,7 @@ import { io } from 'socket.io-client'
 import { startServerJobs, startDailyResetJob } from './utils/job'
 import ordersRouter from './routes/orders.routes'
 import paymentsRouter from './routes/payments.routes'
+import cors from 'cors'
 
 config()
 
@@ -30,6 +31,14 @@ db.sequelize
 const app = express()
 
 const httpServer = createServer(app)
+
+app.use(cors())
+
+const sio = new Server(httpServer, {
+  cors: {
+    origin: '*'
+  }
+})
 
 initFolder()
 startServerJobs()
@@ -56,12 +65,6 @@ app.use('/api/v1/orders', accessTokenValidator, verifiedUserValidator, ordersRou
 app.use('/api/v1/payments', paymentsRouter)
 
 app.use(defaultErrorHandler)
-
-const sio = new Server(httpServer, {
-  cors: {
-    origin: 'http://localhost:3000'
-  }
-})
 
 // const pythonSocket = io('http://localhost:6969')
 
