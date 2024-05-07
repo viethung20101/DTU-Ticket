@@ -16,6 +16,7 @@ import { startServerJobs, startDailyResetJob } from './utils/job'
 import ordersRouter from './routes/orders.routes'
 import paymentsRouter from './routes/payments.routes'
 import cors from 'cors'
+import reviewsRouter from './routes/reviews.routes'
 
 config()
 
@@ -63,6 +64,8 @@ app.use('/api/v1/static', staticRouter)
 app.use('/api/v1/orders', accessTokenValidator, verifiedUserValidator, ordersRouter)
 
 app.use('/api/v1/payments', paymentsRouter)
+
+app.use('/api/v1/reviews', accessTokenValidator, verifiedUserValidator, reviewsRouter)
 
 app.use(defaultErrorHandler)
 

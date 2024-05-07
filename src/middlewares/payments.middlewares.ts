@@ -1,6 +1,7 @@
 import { ParamSchema, checkSchema } from 'express-validator'
-import { PaymentMethod } from '~/constants/enums'
+import { OrderStatus, PaymentMethod } from '~/constants/enums'
 import { PAYMENTS_MESSAGES } from '~/constants/messages'
+import { TokenPayload } from '~/models/Requests/user.requests'
 import ordersService from '~/services/orders.services'
 import { validate } from '~/utils/validation'
 
@@ -17,7 +18,12 @@ export const createPaymentUrlValidator = validate(
         trim: true,
         custom: {
           options: async (value, { req }) => {
-            const isOrderExist = await ordersService.checkOrderExist(value)
+            const { user_id } = req.decoded_authorization as TokenPayload
+            const isOrderExist = await ordersService.checkOrderExist({
+              order_id: value,
+              user_id: user_id,
+              status: OrderStatus.Unpaid
+            })
             if (isOrderExist == null) {
               throw new Error(PAYMENTS_MESSAGES.ORDER_NOT_FOUND)
             }

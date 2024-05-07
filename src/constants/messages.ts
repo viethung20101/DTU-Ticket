@@ -97,3 +97,11 @@ export const PAYMENTS_MESSAGES = {
   LANGUAGE_IS_INVALID: 'Language is invalid',
   GET_ALL_PAYMENTS_SUCCESS: 'Get all payments success'
 } as const
+
+export const REVIEWS_MESSAGES = {
+  RATING_MUST_BE_A_NUMERIC: 'Rating must be a numeric',
+  RATING_IS_REQUIRED: 'Rating is required',
+  RATING_MUST_BE_AN_INTEGER: 'Rating must be an integer',
+  RATING_OUT_OF_RANGE: 'Rating out of range',
+  CANNOT_REVIEW_THIS_TICKET: 'Cannot review this ticket'
+} as const

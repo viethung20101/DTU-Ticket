@@ -50,6 +50,12 @@ export enum PaymentStatus {
   Failed = 'Failed'
 }
 
+export enum ReviewsStatus {
+  NotReviewed = 'NotReviewed',
+  CanReview = 'CanReview',
+  Reviewed = 'Reviewed'
+}
+
 export enum TicketUsageStatus {
   Used = 'Used',
   Unused = 'Unused',
