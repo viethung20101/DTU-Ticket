@@ -1,6 +1,7 @@
 import { Request } from 'express'
 import User from './models/schemas/user.models'
 import { TokenPayload } from '~/models/Requests/user.requests'
+import Ticket from './models/schemas/ticket.models'
 
 declare module 'express' {
   interface Request {
@@ -9,5 +10,6 @@ declare module 'express' {
     decoded_refresh_token?: TokenPayload
     decoded_email_verify_token?: TokenPayload
     decoded_forgot_password_token?: TokenPayload
+    ticket?: Ticket
   }
 }

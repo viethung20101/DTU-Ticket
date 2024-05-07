@@ -5,7 +5,7 @@ import { createPaymentUrlReqBody, querydrReqBody } from '~/models/Requests/payme
 import ordersService from './orders.services'
 import querystring from 'qs'
 import Payment from '~/models/schemas/payment.models'
-import { OrderStatus, PaymentStatus } from '~/constants/enums'
+import { OrderStatus, PaymentStatus, ReviewsStatus } from '~/constants/enums'
 import Order from '~/models/schemas/order.models'
 import usersService from './users.services'
 import OrderDetails from '~/models/schemas/orderDetails.models'
@@ -20,7 +20,8 @@ class PaymentsService {
           { payment_status: PaymentStatus.Success, updated_at: new Date() },
           { where: { _id: paymentId } }
         ),
-        Order.update({ status: OrderStatus.Paid, updated_at: new Date() }, { where: { _id: orderId } })
+        Order.update({ status: OrderStatus.Paid, updated_at: new Date() }, { where: { _id: orderId } }),
+        OrderDetails.update({ status: ReviewsStatus.CanReview, updated_at: new Date() }, { where: { oid: orderId } })
       ])
     } else {
       return Promise.all([
@@ -34,13 +35,13 @@ class PaymentsService {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
   }
 
-  private async sendMail(user_id: string, order_id: string) {
-    console.log('hehehehe', user_id)
+  private async sendMail(userId: string, orderId: string) {
+    console.log('hehehehe', userId)
     const [user, order, orderDetails] = await Promise.all([
-      usersService.findOneUser(user_id),
-      Order.findByPk(order_id),
+      usersService.findOneUser(userId),
+      Order.findByPk(orderId),
       OrderDetails.findAll({
-        where: { oid: order_id },
+        where: { oid: orderId },
         include: [{ model: Ticket, as: 'tickets' }]
       })
     ])
@@ -56,14 +57,14 @@ class PaymentsService {
     }
     await sendVerifyEmail(
       user?.dataValues.email,
-      `Xác nhân đơn hàng ${order_id} từ ${process.env.WEB_NAME}`,
+      `Xác nhân đơn hàng ${orderId} từ ${process.env.WEB_NAME}`,
       `<p>Xin chào ${user?.dataValues.name}</p>
       <p>Cảm ơn Anh/chị đã mua vé tại <b>${process.env.WEB_NAME}!</b></p>
       <h2>Thông tin mua hàng</h2>
       <p>${user?.dataValues.name}</p>
       <p>${user?.dataValues.email}</p>
       <h2>Thông tin đơn hàng</h2>
-      <p>Mã đơn hàng: ${order_id}</p>
+      <p>Mã đơn hàng: ${orderId}</p>
       <p>Ngày đặt hàng: ${moment(order?.dataValues.date_order).format('DD/MM/YYYY')}</p>
       ${orderItemsHtml}
       <p>Thành tiền: ${this.formatPrice(order?.dataValues.total_price)}</p>

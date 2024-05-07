@@ -16,8 +16,8 @@ class OrdersService {
     return order
   }
 
-  async checkOrderExist(_id: string) {
-    const order = await Order.findOne({ where: { _id: _id, status: OrderStatus.Unpaid } })
+  async checkOrderExist({ order_id, user_id, status }: { order_id: string; user_id: string; status: OrderStatus }) {
+    const order = await Order.findOne({ where: { _id: order_id, uid: user_id, status: status } })
     return order
   }
 

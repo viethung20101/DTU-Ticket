@@ -1,6 +1,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
 import Order from './order.models'
 import Ticket from './ticket.models'
+import { ReviewsStatus } from '~/constants/enums'
 
 class OrderDetails extends Model {
   public _id!: string
@@ -9,6 +10,7 @@ class OrderDetails extends Model {
   public quantity!: number
   public price!: number
   public usage_date!: Date
+  public reviews_status!: ReviewsStatus
   public created_at!: Date
   public update_at!: Date
 
@@ -39,6 +41,10 @@ class OrderDetails extends Model {
         usage_date: {
           type: DataTypes.DATEONLY,
           allowNull: false
+        },
+        reviews_status: {
+          type: DataTypes.ENUM(ReviewsStatus.NotReviewed, ReviewsStatus.CanReview, ReviewsStatus.Reviewed),
+          defaultValue: ReviewsStatus.NotReviewed
         },
         created_at: {
           type: DataTypes.DATE,
