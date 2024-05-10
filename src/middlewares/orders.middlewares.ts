@@ -19,6 +19,9 @@ export const createOrderValidator = validate(
               if (!detail.tid || !detail.quantity || !detail.usage_date) {
                 throw new Error('Each order detail must include ticketId, quantity, and usageDate')
               }
+              if (detail.quantity <= 0) {
+                throw new Error('Quantity invalid')
+              }
               const ticket = await ticketsService.checkTicketExist(detail.tid)
               if (!ticket) {
                 throw new Error(`Ticket with ID ${detail.tid} not found`)

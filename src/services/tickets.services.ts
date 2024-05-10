@@ -6,6 +6,7 @@ import OrderDetails from '~/models/schemas/orderDetails.models'
 import Ticket from '~/models/schemas/ticket.models'
 import { Op, Sequelize } from 'sequelize'
 import Media from '~/models/schemas/media.models'
+import Review from '~/models/schemas/review.models'
 
 class TicketsService {
   async checkTicketExist(_id: string) {
@@ -82,7 +83,7 @@ class TicketsService {
 
   async getTicketDetails(id: string) {
     try {
-      const [ticket, medias] = await Promise.all([
+      const [ticket, medias, reviews] = await Promise.all([
         Ticket.findOne({
           include: [
             {
@@ -104,12 +105,26 @@ class TicketsService {
           where: {
             tid: id
           }
+        }),
+        Review.findAll({
+          attributes: ['_id', 'uid', 'rating', 'comment', 'date'],
+          where: {
+            tid: id,
+            shown: ShownStatus.Shown
+          }
         })
       ])
       const mediaArray = medias.map((media) => ({
         id: media.dataValues._id,
         url: media.dataValues.url,
         type: media.dataValues.type
+      }))
+      const reviewArray = reviews.map((review) => ({
+        id: review.dataValues._id,
+        uid: review.dataValues.uid,
+        rating: review.dataValues.rating,
+        comment: review.dataValues.comment,
+        date: review.dataValues.date
       }))
       return {
         id: ticket?.dataValues._id,
@@ -134,8 +149,9 @@ class TicketsService {
         date_start: ticket?.dataValues.date_start,
         date_end: ticket?.dataValues.date_end,
         media: mediaArray,
+        review: reviewArray,
         created_at: ticket?.dataValues.created_at,
-        update_at: ticket?.dataValues.update_at
+        updated_at: ticket?.dataValues.updated_at
       }
     } catch (error) {
       return {

@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
+import { ShownStatus } from '~/constants/enums'
 import { CreateGroupReqBody, UpdateGroupReqBody } from '~/models/Requests/groupTicket.requests'
 import GroupTicket from '~/models/schemas/groupTicket.models'
 
@@ -8,10 +9,26 @@ class GroupTicketsService {
     return group
   }
 
-  async getGroup() {
+  async getAllGroup() {
     try {
       const groupTickets = await GroupTicket.findAll({
         order: [['_id', 'ASC']]
+      })
+      return {
+        data: groupTickets
+      }
+    } catch (error) {
+      return new Error('Error: ' + error)
+    }
+  }
+
+  async getGroup() {
+    try {
+      const groupTickets = await GroupTicket.findAll({
+        order: [['_id', 'ASC']],
+        where: {
+          shown: ShownStatus.Shown
+        }
       })
       return {
         data: groupTickets

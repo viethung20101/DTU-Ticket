@@ -21,7 +21,10 @@ class PaymentsService {
           { where: { _id: paymentId } }
         ),
         Order.update({ status: OrderStatus.Paid, updated_at: new Date() }, { where: { _id: orderId } }),
-        OrderDetails.update({ status: ReviewsStatus.CanReview, updated_at: new Date() }, { where: { oid: orderId } })
+        OrderDetails.update(
+          { reviews_status: ReviewsStatus.CanReview, updated_at: new Date() },
+          { where: { oid: orderId } }
+        )
       ])
     } else {
       return Promise.all([

@@ -160,22 +160,22 @@ export const loginValidator = validate(
 export const registorValidator = validate(
   checkSchema(
     {
-      name: {
-        notEmpty: {
-          errorMessage: USERS_MESSAGES.NAME_IS_REQUIRED
-        },
-        isString: {
-          errorMessage: USERS_MESSAGES.NAME_MUST_BE_A_STRING
-        },
-        isLength: {
-          options: {
-            min: 1,
-            max: 1007
-          },
-          errorMessage: USERS_MESSAGES.NAME_LENGTH_MUST_BE_FROM_1_TO_100
-        },
-        trim: true
-      },
+      // name: {
+      //   notEmpty: {
+      //     errorMessage: USERS_MESSAGES.NAME_IS_REQUIRED
+      //   },
+      //   isString: {
+      //     errorMessage: USERS_MESSAGES.NAME_MUST_BE_A_STRING
+      //   },
+      //   isLength: {
+      //     options: {
+      //       min: 1,
+      //       max: 1007
+      //     },
+      //     errorMessage: USERS_MESSAGES.NAME_LENGTH_MUST_BE_FROM_1_TO_100
+      //   },
+      //   trim: true
+      // },
       email: {
         notEmpty: {
           errorMessage: USERS_MESSAGES.EMAIL_IS_REQUIRED
@@ -195,15 +195,15 @@ export const registorValidator = validate(
         }
       },
       password: passwordSchema,
-      confirm_password: confirmPasswordSchema,
-      date_of_birth: {
-        isISO8601: {
-          options: {
-            strict: true
-          },
-          errorMessage: USERS_MESSAGES.INCORRECT_DATE_FORMAT
-        }
-      }
+      confirm_password: confirmPasswordSchema //,
+      // date_of_birth: {
+      //   isISO8601: {
+      //     options: {
+      //       strict: true
+      //     },
+      //     errorMessage: USERS_MESSAGES.INCORRECT_DATE_FORMAT
+      //   }
+      // }
     },
     ['body']
   )
