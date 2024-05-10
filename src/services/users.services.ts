@@ -84,6 +84,8 @@ class UsersService {
   }
 
   async register(payload: RegisterReqBody) {
+    const { ..._payload } = payload
+    _payload.date_of_birth = payload.date_of_birth ? new Date(payload.date_of_birth) : _payload.date_of_birth
     try {
       const user_id = uuidv4()
       const email_verify_token = await this.signEmailVerifyToken({
@@ -91,14 +93,13 @@ class UsersService {
         verify: UserVerifyStatus.Unverified
       })
       await User.create({
-        ...payload,
+        ..._payload,
         _id: user_id,
         email_verify_token: email_verify_token,
         password: hashPassword(payload.password),
-        date_of_birth: new Date(payload.date_of_birth),
         role: RoleType.User
       })
-      // const user_id = result.dataValues._id.toString()
+
       const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
         user_id: user_id,
         verify: UserVerifyStatus.Unverified,
@@ -108,15 +109,15 @@ class UsersService {
         uid: user_id,
         token: refresh_token
       })
-      // await sendVerifyEmail(
-      //   payload.email,
-      //   'Verify your email',
-      //   '<h1>Verify your Email</h1><p>Click <a href="' +
-      //     process.env.CLIENT_URL +
-      //     '/verify-email=' +
-      //     email_verify_token +
-      //     '">here</a> to verify email</p>'
-      // )
+      await sendVerifyEmail(
+        payload.email,
+        'Verify your email',
+        '<h1>Verify your Email</h1><p>Click <a href="' +
+          process.env.CLIENT_URL +
+          '/verify-email=' +
+          email_verify_token +
+          '">here</a> to verify email</p>'
+      )
       return {
         access_token,
         refresh_token,

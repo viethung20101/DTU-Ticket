@@ -17,6 +17,7 @@ import ordersRouter from './routes/orders.routes'
 import paymentsRouter from './routes/payments.routes'
 import cors from 'cors'
 import reviewsRouter from './routes/reviews.routes'
+import groupTicketsRouter from './routes/groupTickets.routes'
 
 config()
 
@@ -56,6 +57,8 @@ app.use('/api/v1/admin', accessTokenValidator, verifiedUserValidator, adminRoute
 app.use('/api/v1/users', usersRouter)
 
 app.use('/api/v1/tickets', ticketsRouter)
+
+app.use('/api/v1/group-tickets', groupTicketsRouter)
 
 app.use('/api/v1/medias', mediasRouter)
 

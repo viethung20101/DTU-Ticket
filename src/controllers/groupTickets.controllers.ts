@@ -4,10 +4,18 @@ import groupTicketsService from '../services/groupTickets.services'
 import { USERS_MESSAGES } from '~/constants/messages'
 import { CreateGroupReqBody, UpdateGroupReqBody } from '~/models/Requests/groupTicket.requests'
 
+export const getAllGroupTicketsController = async (req: Request, res: Response, next: NextFunction) => {
+  const result = await groupTicketsService.getAllGroup()
+  return res.json({
+    message: USERS_MESSAGES.GET_ALL_GROUP_TICKETS_SUCCESS,
+    result
+  })
+}
+
 export const getGroupTicketsController = async (req: Request, res: Response, next: NextFunction) => {
   const result = await groupTicketsService.getGroup()
   return res.json({
-    message: USERS_MESSAGES.GET_ALL_GROUP_TICKETS_SUCCESS,
+    message: USERS_MESSAGES.GET_GROUP_TICKETS_SUCCESS,
     result
   })
 }

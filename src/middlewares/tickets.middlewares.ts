@@ -64,6 +64,14 @@ const priceSchema: ParamSchema = {
   },
   isNumeric: {
     errorMessage: USERS_MESSAGES.PRICE_IS_NOT_NUMERIC
+  },
+  custom: {
+    options: async (value) => {
+      if (value < 0) {
+        throw new Error(USERS_MESSAGES.PRICE_INVALID)
+      }
+      return true
+    }
   }
 }
 
@@ -93,6 +101,14 @@ const defaultDailyQuotaSchema: ParamSchema = {
   },
   isNumeric: {
     errorMessage: USERS_MESSAGES.DEFAULT_DAILY_QUOTA_MUST_BE_A_NUMERIC
+  },
+  custom: {
+    options: async (value) => {
+      if (value < 0) {
+        throw new Error(USERS_MESSAGES.DEFAULT_DAILY_QUOTA_INVALID)
+      }
+      return true
+    }
   }
 }
 

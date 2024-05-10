@@ -3,7 +3,7 @@ import { wrapRequestHandler } from '~/utils/handlers'
 import {
   createGroupTicketsController,
   deleteGroupTicketsController,
-  getGroupTicketsController,
+  getAllGroupTicketsController,
   updateGroupTicketsController
 } from '~/controllers/groupTickets.controllers'
 import {
@@ -32,7 +32,7 @@ adminRouter.get('/users/data', roleSuperAdminValidator, wrapRequestHandler(getUs
 
 adminRouter.post('/users/set-role', roleSuperAdminValidator, setRoleValidator, wrapRequestHandler(setRoleController))
 
-adminRouter.get('/group-tickets/data', roleAdminValidator, wrapRequestHandler(getGroupTicketsController))
+adminRouter.get('/group-tickets/data', roleAdminValidator, wrapRequestHandler(getAllGroupTicketsController))
 
 adminRouter.post(
   '/group-tickets/create',

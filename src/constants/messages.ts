@@ -48,6 +48,7 @@ export const USERS_MESSAGES = {
   GROUP_ID_IS_REQUIRED: 'Group id is required',
   GROUP_NOT_FOUND: 'Group not found',
   GET_ALL_GROUP_TICKETS_SUCCESS: 'Get all group ticket success',
+  GET_GROUP_TICKETS_SUCCESS: 'Get group ticket success',
   UPDATE_GROUP_TICKET_SUCCESS: 'Update group ticket success',
   OUT_PASSWORD_NOT_MATCH: 'Out password not match',
   CHANGE_PASSWORD_SUCCESS: 'Change password success',
@@ -82,7 +83,9 @@ export const USERS_MESSAGES = {
   ORDER_DETAILS_MUST_BE_AN_ARRAY: 'Order details must be an array',
   ORDER_DETAILS_ARE_REQUIRED: 'Order details are required',
   TICKET_NOT_INSUFFICIENT_QUANTITY: 'Ticket not insufficient quantity',
-  TICKET_USE_DATE_IS_INVALID: 'Ticket use date is invalid'
+  TICKET_USE_DATE_IS_INVALID: 'Ticket use date is invalid',
+  PRICE_INVALID: 'Price invalid',
+  DEFAULT_DAILY_QUOTA_INVALID: 'Default daily quota invalid'
 } as const
 
 export const PAYMENTS_MESSAGES = {
