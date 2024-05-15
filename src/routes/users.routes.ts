@@ -9,7 +9,8 @@ import {
   verifyForgotPasswordTokenValidator,
   resetPasswordValidator,
   verifiedUserValidator,
-  changePasswordValidator
+  changePasswordValidator,
+  updateProfileValidator
 } from '../middlewares/users.middlewares'
 import {
   registerController,
@@ -62,5 +63,7 @@ usersRouter.put(
   changePasswordValidator,
   wrapRequestHandler(changePasswordController)
 )
+
+usersRouter.patch('/update', updateProfileValidator)
 
 export default usersRouter

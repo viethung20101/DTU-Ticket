@@ -99,3 +99,12 @@ export const getAllPaymentsController = async (req: Request, res: Response, next
     result
   })
 }
+
+export const getPaymentsController = async (req: Request, res: Response, next: NextFunction) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await paymentsService.getPayments(user_id)
+  return res.json({
+    message: PAYMENTS_MESSAGES.GET_ALL_PAYMENTS_SUCCESS,
+    result
+  })
+}

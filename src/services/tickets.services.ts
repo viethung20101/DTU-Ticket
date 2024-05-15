@@ -7,6 +7,7 @@ import Ticket from '~/models/schemas/ticket.models'
 import { Op, Sequelize } from 'sequelize'
 import Media from '~/models/schemas/media.models'
 import Review from '~/models/schemas/review.models'
+import { ParsedQs } from 'qs'
 
 class TicketsService {
   async checkTicketExist(_id: string) {
@@ -14,8 +15,22 @@ class TicketsService {
     return ticket
   }
 
-  async getTickets({ page, size }: { page: number; size: number }) {
+  async getTickets(payload: ParsedQs) {
     try {
+      let page = parseInt(payload.page as string)
+      let size = parseInt(payload.size as string)
+      const orderOption: [string, string][] = []
+      const whereCondition: any = {
+        shown: ShownStatus.Shown
+      }
+      const whereGroupTicketCondition: any = {
+        shown: ShownStatus.Shown
+      }
+
+      if (payload.sort) {
+        orderOption.push(['price', payload.sort === 'price_asc' ? 'ASC' : 'DESC'])
+      }
+
       if (!page) {
         page = 1
       }
@@ -24,6 +39,33 @@ class TicketsService {
       }
       const limit = size
       const offset = (page - 1) * size
+
+      if (payload.price) {
+        whereCondition.price = parseFloat(payload.price as string)
+      }
+
+      if (payload.price) {
+        whereCondition.price = parseFloat(payload.price as string)
+      }
+
+      if (payload.min_price) {
+        whereCondition.price = {
+          ...whereCondition.price,
+          [Op.gte]: parseFloat(payload.min_price as string)
+        }
+      }
+
+      if (payload.max_price) {
+        whereCondition.price = {
+          ...whereCondition.price,
+          [Op.lte]: parseFloat(payload.max_price as string)
+        }
+      }
+
+      if (payload.type) {
+        whereGroupTicketCondition.name = payload.type
+      }
+
       const tickets = await Ticket.findAll({
         attributes: ['_id', 'name', 'price', 'day_of_week', 'short_description'],
         include: [
@@ -31,14 +73,11 @@ class TicketsService {
             model: GroupTicket,
             attributes: ['name'],
             as: 'group_tickets',
-            where: {
-              shown: ShownStatus.Shown
-            }
+            where: whereGroupTicketCondition
           }
         ],
-        where: {
-          shown: ShownStatus.Shown
-        },
+        where: whereCondition,
+        order: orderOption.length > 0 ? orderOption : undefined,
         limit,
         offset
       })
@@ -72,6 +111,7 @@ class TicketsService {
       return {
         page: page,
         size: size,
+        total: total_documents,
         data: ticketArray,
         previous: previous_pages,
         next: next_pages

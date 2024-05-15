@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   createPaymentUrlController,
+  getPaymentsController,
   querydrController,
   vnpayIpnController
   // vnpayReturnController
@@ -24,5 +25,7 @@ paymentsRouter.post(
 paymentsRouter.get('/vnpay_ipn', vnpayIpnController)
 
 paymentsRouter.post('/querydr', querydrController)
+
+paymentsRouter.get('/list', accessTokenValidator, verifiedUserValidator, wrapRequestHandler(getPaymentsController))
 
 export default paymentsRouter
