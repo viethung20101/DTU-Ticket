@@ -32,6 +32,34 @@ class ReviewsService {
       throw new Error('Error: ' + error)
     }
   }
+
+  async getAllReviews() {
+    try {
+      const reviews = await Review.findAll()
+      return {
+        data: reviews
+      }
+    } catch (error) {
+      console.log(error)
+      return {
+        error: error
+      }
+    }
+  }
+
+  async getReviews(user_id: string) {
+    try {
+      const reviews = await Review.findAll({ where: { uid: user_id } })
+      return {
+        data: reviews
+      }
+    } catch (error) {
+      console.log(error)
+      return {
+        error: error
+      }
+    }
+  }
 }
 
 const reviewsService = new ReviewsService()

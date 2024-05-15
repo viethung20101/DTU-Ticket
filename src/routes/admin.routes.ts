@@ -25,6 +25,7 @@ import { createTicketValidator, deleteTicketValidator, updateTicketValidator } f
 import { UpdateTicketReqBody } from '~/models/Requests/ticket.requests'
 import { getAllPaymentsController } from '~/controllers/payments.controllers'
 import { uploadTicketImageController } from '~/controllers/medias.controllers'
+import { getAllReviewsController } from '~/controllers/reviews.controllers'
 
 const adminRouter = Router()
 
@@ -103,5 +104,7 @@ adminRouter.post(
 )
 
 adminRouter.get('/payments/data', roleAdminValidator, wrapRequestHandler(getAllPaymentsController))
+
+adminRouter.get('/reviews/data', roleAdminValidator, wrapRequestHandler(getAllReviewsController))
 
 export default adminRouter

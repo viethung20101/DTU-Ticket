@@ -308,6 +308,31 @@ class PaymentsService {
       }
     }
   }
+
+  async getPayments(user_id: string) {
+    try {
+      const orders = await Order.findAll({ where: { uid: user_id } })
+      const paymentArray = await Promise.all(
+        orders.map(async (order) => {
+          const payment = await Payment.findAll({
+            where: {
+              oid: order.dataValues._id
+            }
+          })
+
+          return payment
+        })
+      )
+      return {
+        data: paymentArray
+      }
+    } catch (error) {
+      console.log(error)
+      return {
+        error: error
+      }
+    }
+  }
 }
 
 function sortObject(obj: any) {

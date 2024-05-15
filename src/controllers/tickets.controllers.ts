@@ -6,8 +6,9 @@ import { CreateTicketReqBody, UpdateTicketReqBody } from '~/models/Requests/tick
 
 export const getTicketsController = async (req: Request, res: Response, next: NextFunction) => {
   const { page, size } = req.query
-  const result = await ticketsService.getTickets({ page: parseInt(page as string), size: parseInt(size as string) })
-  return res.setHeader('Content-Type', 'application/json; charset=utf-8').json({
+  const result = await ticketsService.getTickets(req.query)
+  // const result = await ticketsService.getTickets({ page: parseInt(page as string), size: parseInt(size as string) })
+  return res.json({
     message: USERS_MESSAGES.GET_ALL_TICKETS_SUCCESS,
     result
   })
@@ -24,7 +25,7 @@ export const getTicketDetailsController = async (req: Request, res: Response, ne
 
 export const getAllTicketsController = async (req: Request, res: Response, next: NextFunction) => {
   const result = await ticketsService.getAllTickets()
-  return res.setHeader('Content-Type', 'application/json; charset=utf-8').json({
+  return res.json({
     message: USERS_MESSAGES.GET_ALL_TICKETS_SUCCESS,
     result
   })

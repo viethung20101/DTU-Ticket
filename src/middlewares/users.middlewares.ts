@@ -433,3 +433,17 @@ export const changePasswordValidator = validate(
     ['body']
   )
 )
+
+export const updateProfileValidator = validate(
+  checkSchema(
+    {
+      name: {
+
+      },
+      date_of_birth: {
+        
+      }
+    },
+    ['body']
+  )
+)

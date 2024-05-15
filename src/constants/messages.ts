@@ -106,5 +106,7 @@ export const REVIEWS_MESSAGES = {
   RATING_IS_REQUIRED: 'Rating is required',
   RATING_MUST_BE_AN_INTEGER: 'Rating must be an integer',
   RATING_OUT_OF_RANGE: 'Rating out of range',
-  CANNOT_REVIEW_THIS_TICKET: 'Cannot review this ticket'
+  CANNOT_REVIEW_THIS_TICKET: 'Cannot review this ticket',
+  CREATE_REVIEW_SUCCESS: 'Create review success',
+  GET_ALL_REVIEWS_SUCCESS: 'Get all reviews success'
 } as const

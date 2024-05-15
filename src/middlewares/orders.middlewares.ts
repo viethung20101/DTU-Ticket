@@ -22,6 +22,11 @@ export const createOrderValidator = validate(
               if (detail.quantity <= 0) {
                 throw new Error('Quantity invalid')
               }
+              const today = new Date()
+              const usage_date = new Date(detail.usage_date)
+              if (today > usage_date) {
+                throw new Error('Usage date invalid')
+              }
               const ticket = await ticketsService.checkTicketExist(detail.tid)
               if (!ticket) {
                 throw new Error(`Ticket with ID ${detail.tid} not found`)
