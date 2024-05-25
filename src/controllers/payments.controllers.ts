@@ -60,7 +60,7 @@ export const createPaymentUrlController = async (
 
 export const vnpayIpnController = async (req: Request, res: Response, next: NextFunction) => {
   const result = await paymentsService.vnpayIpn(req.query)
-  return res.json(result)
+  return res.redirect(result.url)
 }
 
 export const querydrController = async (

@@ -1,6 +1,6 @@
 import User from '~/models/schemas/user.models'
 import db from './database.services'
-import { RegisterReqBody } from '~/models/Requests/user.requests'
+import { RegisterReqBody, UpdateProfileReqBody } from '~/models/Requests/user.requests'
 import { hashPassword } from '~/utils/crypto'
 import { TokenType, UserVerifyStatus, RoleType } from '~/constants/enums'
 import { signToken } from '~/utils/jwt'
@@ -114,7 +114,7 @@ class UsersService {
         'Verify your email',
         '<h1>Verify your Email</h1><p>Click <a href="' +
           process.env.CLIENT_URL +
-          '/verify-email=' +
+          '/verify-email?email_verify_token=' +
           email_verify_token +
           '">here</a> to verify email</p>'
       )
@@ -245,14 +245,28 @@ class UsersService {
 
   async forgotPassword({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     try {
-      const forgot_password_token = await this.signForgotPasswordToken({
-        user_id,
-        verify
-      })
-      await User.update(
-        { forgot_password_token: forgot_password_token, updated_at: new Date() },
-        { where: { _id: user_id } }
-      )
+      const [forgot_password_token, user] = await Promise.all([
+        this.signForgotPasswordToken({
+          user_id,
+          verify
+        }),
+        this.findOneUser(user_id)
+      ])
+      await Promise.all([
+        User.update(
+          { forgot_password_token: forgot_password_token, updated_at: new Date() },
+          { where: { _id: user_id } }
+        ),
+        sendVerifyEmail(
+          user?.dataValues.email,
+          'Reset your Password',
+          '<h1>Reset your Password</h1><p>Click <a href="' +
+            process.env.CLIENT_URL +
+            '/forgot-password?forgot_password_token=' +
+            forgot_password_token +
+            '">here</a> to reset your password</p>'
+        )
+      ])
     } catch (error) {
       throw new Error('Error: ' + error)
     }
@@ -304,6 +318,19 @@ class UsersService {
       }
     } catch (error) {
       return new Error('Error: ' + error)
+    }
+  }
+
+  async updateProfile({ user_id, payload }: { user_id: string; payload: UpdateProfileReqBody }) {
+    const { ..._payload } = payload
+    _payload.date_of_birth = payload.date_of_birth ? new Date(payload.date_of_birth) : _payload.date_of_birth
+    try {
+      await User.update({ ..._payload, updated_at: new Date() }, { where: { _id: user_id } })
+    } catch (error) {
+      console.log(error)
+      return {
+        error: error
+      }
     }
   }
 }

@@ -11,6 +11,9 @@ import usersService from './users.services'
 import OrderDetails from '~/models/schemas/orderDetails.models'
 import Ticket from '~/models/schemas/ticket.models'
 import { sendVerifyEmail } from '~/utils/email'
+import fs from 'fs'
+import dayjs from 'dayjs'
+import { UPLOAD_DIR } from '~/constants/dir'
 
 class PaymentsService {
   private updatePayment(paymentId: string, orderId: string, status: number) {
@@ -34,12 +37,77 @@ class PaymentsService {
     }
   }
 
+  private async postPayment(userId: string, orderId: string) {
+    const [user, orderDetails] = await Promise.all([
+      usersService.findOneUser(userId),
+      OrderDetails.findAll({
+        where: { oid: orderId },
+        include: [{ model: Ticket, as: 'tickets' }]
+      })
+    ])
+    const orderDetailsArray = orderDetails.map((detail) => ({
+      code: detail.dataValues.tid,
+      day: dayjs(detail.dataValues.usage_date).date(),
+      month: dayjs(detail.dataValues.usage_date).month() + 1,
+      year: dayjs(detail.dataValues.usage_date).year()
+    }))
+    const serverDetectUrl = process.env.SERVER_DETECT_URL as string
+    const dataObj = {
+      name: user?.dataValues.email,
+      ticket: orderDetailsArray,
+      imageBase64: this.convertImageToBase64(this.splitUrl(user?.dataValues.url))
+    }
+
+    import('node-fetch').then((fetch) => {
+      fetch
+        .default(serverDetectUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420'
+          },
+          body: JSON.stringify(dataObj)
+        })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
+          return response.json()
+        })
+        .then((data) => {
+          return {
+            data: data
+          }
+        })
+        .catch((error) => {
+          throw new Error('Error: ' + error)
+        })
+    })
+  }
+
+  private splitUrl(url: string) {
+    const urlSplit = url.split('image/')
+    return urlSplit[1]
+  }
+
+  private convertImageToBase64(imagePath: string) {
+    try {
+      const imageBuffer = fs.readFileSync(UPLOAD_DIR + '/' + imagePath + '.jpg')
+
+      const base64Image = imageBuffer.toString('base64')
+
+      return base64Image
+    } catch (error) {
+      console.error(error)
+      return null
+    }
+  }
+
   private formatPrice(price: number) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
   }
 
   private async sendMail(userId: string, orderId: string) {
-    console.log('hehehehe', userId)
     const [user, order, orderDetails] = await Promise.all([
       usersService.findOneUser(userId),
       Order.findByPk(orderId),
@@ -174,44 +242,55 @@ class PaymentsService {
         if (checkAmount) {
           if (paymentStatus == PaymentStatus.Init) {
             if (rspCode == '00') {
+              //  Promise.all([
+              //   this.updatePayment(paymentId, orderId, 1),
+              //   this.sendMail(user_id, orderId),
+              //   this.postPayment(user_id, orderId)
+              // ])
               await Promise.all([this.updatePayment(paymentId, orderId, 1), this.sendMail(user_id, orderId)])
               return {
                 message: 'success',
-                RspCode: '00'
+                RspCode: '00',
+                url: process.env.CLIENT_URL + '?oid=' + orderId
               }
             } else {
               await this.updatePayment(paymentId, orderId, 0)
               return {
                 message: 'Failed',
-                RspCode: rspCode
+                RspCode: rspCode,
+                url: process.env.CLIENT_URL + '?oid=' + orderId
               }
             }
           } else {
             await this.updatePayment(paymentId, orderId, 0)
             return {
               message: 'This order has been updated to the payment status',
-              RspCode: rspCode
+              RspCode: rspCode,
+              url: process.env.CLIENT_URL + '?oid=' + orderId
             }
           }
         } else {
           await this.updatePayment(paymentId, orderId, 0)
           return {
             message: 'Amount invalid',
-            RspCode: rspCode
+            RspCode: rspCode,
+            url: process.env.CLIENT_URL + '?oid=' + orderId
           }
         }
       } else {
         await this.updatePayment(paymentId, orderId, 0)
         return {
           message: 'Order not found',
-          RspCode: rspCode
+          RspCode: rspCode,
+          url: process.env.CLIENT_URL + '?oid=' + orderId
         }
       }
     } else {
       await this.updatePayment(paymentId, orderId, 0)
       return {
         message: 'Checksum failed',
-        RspCode: rspCode
+        RspCode: rspCode,
+        url: process.env.CLIENT_URL + '?oid=' + orderId
       }
     }
   }
@@ -316,15 +395,19 @@ class PaymentsService {
         orders.map(async (order) => {
           const payment = await Payment.findAll({
             where: {
-              oid: order.dataValues._id
+              oid: order.dataValues._id,
+              payment_status: PaymentStatus.Success
             }
           })
 
           return payment
         })
       )
+
+      const filteredPaymentArray = paymentArray.filter((payment) => payment.length > 0)
+
       return {
-        data: paymentArray
+        data: filteredPaymentArray
       }
     } catch (error) {
       console.log(error)

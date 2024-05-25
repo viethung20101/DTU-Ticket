@@ -85,7 +85,8 @@ export const USERS_MESSAGES = {
   TICKET_NOT_INSUFFICIENT_QUANTITY: 'Ticket not insufficient quantity',
   TICKET_USE_DATE_IS_INVALID: 'Ticket use date is invalid',
   PRICE_INVALID: 'Price invalid',
-  DEFAULT_DAILY_QUOTA_INVALID: 'Default daily quota invalid'
+  DEFAULT_DAILY_QUOTA_INVALID: 'Default daily quota invalid',
+  UPDATE_PROFILE_SUCCESS: 'Update profile success'
 } as const
 
 export const PAYMENTS_MESSAGES = {
