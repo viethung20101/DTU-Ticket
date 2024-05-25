@@ -33,6 +33,10 @@ class User extends Model {
             isEmail: true
           }
         },
+        url: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
         date_of_birth: {
           type: DataTypes.DATE,
           allowNull: true

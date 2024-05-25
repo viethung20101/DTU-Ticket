@@ -7,9 +7,9 @@ export interface LoginReqBody {
 }
 
 export interface RegisterReqBody {
-  name: string
+  name?: string
   email: string
-  date_of_birth: Date
+  date_of_birth?: Date
   password: string
   confirm_password: string
 }
@@ -36,4 +36,9 @@ export interface TokenPayload extends JwtPayload {
   user_id: string
   token_type: TokenType
   role_type: RoleType
+}
+
+export interface UpdateProfileReqBody {
+  name?: string
+  date_of_birth?: Date
 }

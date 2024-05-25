@@ -16,12 +16,12 @@ export const initFolder = () => {
   }
 }
 
-export const handleUploadImage = async (req: Request) => {
+export const handleUploadImage = async ({ req, maxFiles }: { req: Request; maxFiles: number }) => {
   const formidable = (await import('formidable')).default
   const form = formidable({
     uploadDir: UPLOAD_TEMP_DIR,
     multiples: true,
-    maxFiles: 10,
+    maxFiles: maxFiles,
     keepExtensions: true,
     maxFieldsSize: 300 * 1024,
     maxTotalFileSize: 300 * 1024 * 10,

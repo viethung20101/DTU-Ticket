@@ -3,11 +3,12 @@ import path from 'path'
 import { UPLOAD_DIR, UPLOAD_TICKET_DIR } from '~/constants/dir'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { USERS_MESSAGES } from '~/constants/messages'
+import { TokenPayload } from '~/models/Requests/user.requests'
 import mediasService from '~/services/medias.services'
 import ticketsService from '~/services/tickets.services'
 
 export const uploadImageController = async (req: Request, res: Response, next: NextFunction) => {
-  const result = await mediasService.handleUploadFileImage({ req: req, uploadDir: UPLOAD_DIR })
+  const result = await mediasService.handleUploadFileImage({ req: req, uploadDir: UPLOAD_DIR, maxFiles: 10 })
   return res.json({
     result: result
   })
@@ -42,6 +43,15 @@ export const uploadTicketImageController = async (req: Request, res: Response, n
   const result = await mediasService.uploadTicketImage({ tid: tid, req: req })
   return res.json({
     message: 'Upload images success',
+    result: result
+  })
+}
+
+export const uploadAvatarController = async (req: Request, res: Response, next: NextFunction) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await mediasService.uploadAvatar({ user_id: user_id, req: req })
+  return res.json({
+    message: 'Upload avatar success',
     result: result
   })
 }

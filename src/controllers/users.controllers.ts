@@ -7,7 +7,8 @@ import {
   verifyForgotPasswordTokenReqBody,
   resetPasswordReqBody,
   LoginReqBody,
-  RefreshTokenReqBody
+  RefreshTokenReqBody,
+  UpdateProfileReqBody
 } from '~/models/Requests/user.requests'
 import usersService from '~/services/users.services'
 import User from '~/models/schemas/user.models'
@@ -99,10 +100,11 @@ export const emailVerifyController = async (req: Request, res: Response) => {
     })
   }
   const result = await usersService.verifyEmail(user_id, user.dataValues.role)
-  return res.json({
-    message: USERS_MESSAGES.EMAIL_VERIFY_SUCCESS,
-    result
-  })
+  // return res.json({
+  //   message: USERS_MESSAGES.EMAIL_VERIFY_SUCCESS,
+  //   result
+  // })
+  return res.redirect(process.env.RETURN_URL as string)
 }
 
 export const resendVerifyEmailController = async (req: Request, res: Response) => {
@@ -148,9 +150,10 @@ export const resetPasswordController = async (
   const { user_id } = req.decoded_forgot_password_token as TokenPayload
   const { password } = req.body
   await usersService.resetPassword(user_id, password)
-  return res.json({
-    message: USERS_MESSAGES.RESET_PASSWORD_SUCCESS
-  })
+  // return res.json({
+  //   message: USERS_MESSAGES.RESET_PASSWORD_SUCCESS
+  // })
+  return res.redirect(process.env.RETURN_URL as string)
 }
 
 export const getMeController = async (req: Request, res: Response) => {
@@ -168,5 +171,18 @@ export const changePasswordController = async (req: Request, res: Response) => {
   await usersService.changePassword(user_id, password)
   return res.json({
     message: USERS_MESSAGES.CHANGE_PASSWORD_SUCCESS
+  })
+}
+
+export const updateProfileController = async (
+  req: Request<ParamsDictionary, any, UpdateProfileReqBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const { body } = req
+  await usersService.updateProfile({ user_id: user_id, payload: body })
+  return res.json({
+    message: USERS_MESSAGES.UPDATE_PROFILE_SUCCESS
   })
 }

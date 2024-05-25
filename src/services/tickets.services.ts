@@ -8,6 +8,7 @@ import { Op, Sequelize } from 'sequelize'
 import Media from '~/models/schemas/media.models'
 import Review from '~/models/schemas/review.models'
 import { ParsedQs } from 'qs'
+import User from '~/models/schemas/user.models'
 
 class TicketsService {
   async checkTicketExist(_id: string) {
@@ -77,18 +78,32 @@ class TicketsService {
           }
         ],
         where: whereCondition,
-        order: orderOption.length > 0 ? orderOption : undefined,
-        limit,
-        offset
+        order: orderOption.length > 0 ? orderOption : undefined
       })
+
+      const paginatedTickets = tickets.slice(offset, offset + size)
+
       const ticketArray = await Promise.all(
-        tickets.map(async (ticket) => {
-          const media = await Media.findOne({
-            attributes: ['_id', 'url', 'type'],
-            where: {
-              tid: ticket.dataValues._id
-            }
-          })
+        paginatedTickets.map(async (ticket) => {
+          const [media, reviews] = await Promise.all([
+            Media.findOne({
+              attributes: ['_id', 'url', 'type'],
+              where: {
+                tid: ticket.dataValues._id
+              }
+            }),
+            Review.findAll({
+              attributes: ['_id', 'uid', 'rating', 'comment', 'date'],
+              where: {
+                tid: ticket.dataValues._id,
+                shown: ShownStatus.Shown
+              }
+            })
+          ])
+
+          const totalReviews = reviews.length
+          const ratings = reviews.map((review) => review.dataValues.rating)
+          const averageRating = ratings.reduce((sum, rating) => sum + rating, 0) / totalReviews
 
           return {
             id: ticket.dataValues._id,
@@ -101,13 +116,16 @@ class TicketsService {
               id: media?.dataValues._id,
               url: media?.dataValues.url,
               type: media?.dataValues.type
-            }
+            },
+            average_rating: averageRating,
+            total_reviews: totalReviews
           }
         })
       )
-      const total_documents = await Ticket.count()
-      const previous_pages = page - 1
-      const next_pages = Math.ceil((total_documents - offset) / size)
+      const total_documents = tickets.length
+      const previous_pages = page > 1 ? page - 1 : null
+      const totalPages = Math.ceil((total_documents - offset) / size)
+      const next_pages = page < totalPages ? page + 1 : null
       return {
         page: page,
         size: size,
@@ -159,13 +177,24 @@ class TicketsService {
         url: media.dataValues.url,
         type: media.dataValues.type
       }))
-      const reviewArray = reviews.map((review) => ({
-        id: review.dataValues._id,
-        uid: review.dataValues.uid,
-        rating: review.dataValues.rating,
-        comment: review.dataValues.comment,
-        date: review.dataValues.date
-      }))
+      const reviewArray = await Promise.all(
+        reviews.map(async (review) => {
+          const user = await User.findOne({
+            attributes: ['name'],
+            where: {
+              _id: review.dataValues.uid
+            }
+          })
+          return {
+            id: review.dataValues._id,
+            name: user?.dataValues.name,
+            rating: review.dataValues.rating,
+            comment: review.dataValues.comment,
+            date: review.dataValues.date
+          }
+        })
+      )
+
       return {
         id: ticket?.dataValues._id,
         group_ticket: ticket?.dataValues.group_tickets.dataValues.name,

@@ -28,6 +28,7 @@ export const createReviewsValidator = validate(
               user_id: user_id,
               status: OrderStatus.Paid
             })
+            console.log(value, user_id, OrderStatus.Paid)
             if (isOrderExist == null) {
               throw new Error(PAYMENTS_MESSAGES.ORDER_NOT_FOUND)
             }

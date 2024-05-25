@@ -13,6 +13,31 @@ import { capitalize } from 'lodash'
 import { TokenPayload } from '~/models/Requests/user.requests'
 import { UserVerifyStatus } from '~/constants/enums'
 
+const nameSchema: ParamSchema = {
+  optional: true,
+  isString: {
+    errorMessage: USERS_MESSAGES.NAME_MUST_BE_A_STRING
+  },
+  isLength: {
+    options: {
+      min: 1,
+      max: 1007
+    },
+    errorMessage: USERS_MESSAGES.NAME_LENGTH_MUST_BE_FROM_1_TO_100
+  },
+  trim: true
+}
+
+const dateOfBirthSchema: ParamSchema = {
+  optional: true,
+  isISO8601: {
+    options: {
+      strict: true
+    },
+    errorMessage: USERS_MESSAGES.INCORRECT_DATE_FORMAT
+  }
+}
+
 const passwordSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
@@ -160,22 +185,7 @@ export const loginValidator = validate(
 export const registorValidator = validate(
   checkSchema(
     {
-      // name: {
-      //   notEmpty: {
-      //     errorMessage: USERS_MESSAGES.NAME_IS_REQUIRED
-      //   },
-      //   isString: {
-      //     errorMessage: USERS_MESSAGES.NAME_MUST_BE_A_STRING
-      //   },
-      //   isLength: {
-      //     options: {
-      //       min: 1,
-      //       max: 1007
-      //     },
-      //     errorMessage: USERS_MESSAGES.NAME_LENGTH_MUST_BE_FROM_1_TO_100
-      //   },
-      //   trim: true
-      // },
+      name: nameSchema,
       email: {
         notEmpty: {
           errorMessage: USERS_MESSAGES.EMAIL_IS_REQUIRED
@@ -195,15 +205,8 @@ export const registorValidator = validate(
         }
       },
       password: passwordSchema,
-      confirm_password: confirmPasswordSchema //,
-      // date_of_birth: {
-      //   isISO8601: {
-      //     options: {
-      //       strict: true
-      //     },
-      //     errorMessage: USERS_MESSAGES.INCORRECT_DATE_FORMAT
-      //   }
-      // }
+      confirm_password: confirmPasswordSchema,
+      date_of_birth: dateOfBirthSchema
     },
     ['body']
   )
@@ -419,10 +422,7 @@ export const changePasswordValidator = validate(
             const password = user.dataValues.password
             const isMatch = hashPassword(value) == password
             if (!isMatch) {
-              throw new ErrorWithStatus({
-                message: USERS_MESSAGES.OUT_PASSWORD_NOT_MATCH,
-                status: HTTP_STATUS.UNAUTHORIZED
-              })
+              throw new Error(USERS_MESSAGES.OUT_PASSWORD_NOT_MATCH)
             }
           }
         }
@@ -437,12 +437,8 @@ export const changePasswordValidator = validate(
 export const updateProfileValidator = validate(
   checkSchema(
     {
-      name: {
-
-      },
-      date_of_birth: {
-        
-      }
+      name: nameSchema,
+      date_of_birth: dateOfBirthSchema
     },
     ['body']
   )

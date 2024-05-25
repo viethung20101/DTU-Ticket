@@ -24,9 +24,13 @@ import {
   getMeController,
   oauthController,
   changePasswordController,
-  refreshTokenController
+  refreshTokenController,
+  updateProfileController
 } from '~/controllers/users.controllers'
 import { wrapRequestHandler } from '~/utils/handlers'
+import { filterMiddleware } from '~/middlewares/common.middlewares'
+import { UpdateProfileReqBody } from '~/models/Requests/user.requests'
+import { uploadAvatarController } from '~/controllers/medias.controllers'
 
 const usersRouter = Router()
 
@@ -54,7 +58,7 @@ usersRouter.post(
 
 usersRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(resetPasswordController))
 
-usersRouter.get('/me', accessTokenValidator, wrapRequestHandler(getMeController))
+usersRouter.get('/profile', accessTokenValidator, wrapRequestHandler(getMeController))
 
 usersRouter.put(
   '/change-password',
@@ -64,6 +68,20 @@ usersRouter.put(
   wrapRequestHandler(changePasswordController)
 )
 
-usersRouter.patch('/update', updateProfileValidator)
+usersRouter.patch(
+  '/update',
+  accessTokenValidator,
+  verifiedUserValidator,
+  updateProfileValidator,
+  filterMiddleware<UpdateProfileReqBody>(['name', 'date_of_birth']),
+  wrapRequestHandler(updateProfileController)
+)
+
+usersRouter.post(
+  '/upload-avatar',
+  accessTokenValidator,
+  verifiedUserValidator,
+  wrapRequestHandler(uploadAvatarController)
+)
 
 export default usersRouter
