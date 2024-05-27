@@ -4,16 +4,29 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { ErrorWithStatus } from '~/utils/Errors'
 
 export const defaultErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof ErrorWithStatus) {
-    return res.status(err.status).json(err)
+  try {
+    if (err instanceof ErrorWithStatus) {
+      return res.status(err.status).json(err)
+    }
+    const finalError: any = {}
+    Object.getOwnPropertyNames(err).forEach((key) => {
+      if (
+        !Object.getOwnPropertyDescriptor(err, key)?.configurable ||
+        !Object.getOwnPropertyDescriptor(err, key)?.writable
+      ) {
+        return
+      }
+      finalError[key] = err[key]
+    })
+
+    return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+      message: finalError.message,
+      errorInfo: omit(finalError, ['stack'])
+    })
+  } catch (error) {
+    return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+      message: 'Internal server error',
+      errorInfo: omit(error as any, ['stack'])
+    })
   }
-
-  Object.getOwnPropertyNames(err).forEach((key) => {
-    Object.defineProperty(err, key, { enumerable: true })
-  })
-
-  return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-    message: err.message,
-    errorInfo: omit(err, ['stack'])
-  })
 }

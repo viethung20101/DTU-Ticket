@@ -2,6 +2,7 @@ import { ParamSchema, checkSchema } from 'express-validator'
 import { validate } from '~/utils/validation'
 import { USERS_MESSAGES } from '~/constants/messages'
 import groupTicketsService from '~/services/groupTickets.services'
+import { ShownStatus } from '~/constants/enums'
 
 const idSchema: ParamSchema = {
   isString: {
@@ -85,10 +86,19 @@ export const createGroupValidator = validate(
   checkSchema(
     {
       name: nameSchema,
-      short_description: shortDescriptionSchema,
-      description: descriptionSchema,
-      date_start: dateStartSchema,
-      date_end: dateEndSchema
+      short_description: {
+        optional: true,
+        ...shortDescriptionSchema
+      },
+      description: shortDescriptionSchema,
+      date_start: {
+        optional: true,
+        ...dateStartSchema
+      },
+      date_end: {
+        optional: true,
+        ...dateEndSchema
+      }
     },
     ['body']
   )
@@ -105,8 +115,7 @@ export const updateGroupValidator = validate(
       },
       short_description: {
         optional: true,
-        ...shortDescriptionSchema,
-        notEmpty: undefined
+        ...shortDescriptionSchema
       },
       description: {
         optional: true,
@@ -131,6 +140,24 @@ export const deleteGroupValidator = validate(
     {
       id: idSchema
     },
-    ['body']
+    ['params']
+  )
+)
+
+export const changeStatusGroupValidator = validate(
+  checkSchema(
+    {
+      id: idSchema,
+      shown: {
+        notEmpty: {
+          errorMessage: USERS_MESSAGES.GROUP_TICKET_STATUS_IS_REQUIRED
+        },
+        isIn: {
+          options: [ShownStatus],
+          errorMessage: USERS_MESSAGES.STATUS_INVALID
+        }
+      }
+    },
+    ['params', 'body']
   )
 )

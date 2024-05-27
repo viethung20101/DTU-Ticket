@@ -7,7 +7,7 @@ import { OrderStatus } from '~/constants/enums'
 import { Op, Sequelize, json, where } from 'sequelize'
 import { USERS_MESSAGES } from '~/constants/messages'
 import { CreateOrderDetailsReqBody } from '~/models/Requests/order.requests'
-import { sendVerifyEmail } from '~/utils/email'
+import { sendVerifyEmail } from '~/utils/emailAWS'
 import usersService from './users.services'
 
 class OrdersService {

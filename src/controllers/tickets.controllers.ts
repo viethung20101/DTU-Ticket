@@ -24,7 +24,7 @@ export const getTicketDetailsController = async (req: Request, res: Response, ne
 }
 
 export const getAllTicketsController = async (req: Request, res: Response, next: NextFunction) => {
-  const result = await ticketsService.getAllTickets()
+  const result = await ticketsService.getAllTickets(req.query)
   return res.json({
     message: USERS_MESSAGES.GET_ALL_TICKETS_SUCCESS,
     result
@@ -55,9 +55,19 @@ export const updateTicketController = async (
 }
 
 export const deleteTicketController = async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.body
+  const { id } = req.params
   await ticketsService.deleteTicket(id)
   return res.json({
     message: USERS_MESSAGES.DELETE_TICKET_SUCCESS
+  })
+}
+
+export const changeStatusTicketController = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  const { shown } = req.body
+  const result = await ticketsService.changeStatusTicket({ id: id, shown: shown })
+  return res.json({
+    message: USERS_MESSAGES.CHANGE_STATUS_SUCCESS,
+    result
   })
 }
