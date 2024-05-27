@@ -57,7 +57,7 @@ class Ticket extends Model {
         },
         day_of_week: {
           type: DataTypes.STRING,
-          allowNull: false
+          allowNull: true
         },
         default_daily_quota: {
           type: DataTypes.INTEGER,

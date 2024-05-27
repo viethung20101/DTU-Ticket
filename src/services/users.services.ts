@@ -6,8 +6,9 @@ import { TokenType, UserVerifyStatus, RoleType } from '~/constants/enums'
 import { signToken } from '~/utils/jwt'
 import RefreshToken from '~/models/schemas/refreshToken.models'
 import { v4 as uuidv4 } from 'uuid'
-import { sendVerifyEmail } from '~/utils/email'
+import { sendVerifyEmail } from '~/utils/emailAWS'
 import { Op } from 'sequelize'
+import { ParsedQs } from 'qs'
 
 class UsersService {
   private signAccessToken({ user_id, verify, role }: { user_id: string; verify: UserVerifyStatus; role: RoleType }) {
@@ -302,19 +303,72 @@ class UsersService {
     }
   }
 
-  async getUsers() {
+  async getAllUsers(payload: ParsedQs) {
     try {
+      let page = parseInt(payload.page as string)
+      let size = parseInt(payload.size as string)
+      if (!page) {
+        page = 1
+      }
+      if (!size) {
+        size = 10
+      }
+      const offset = (page - 1) * size
       const users = await User.findAll({
         attributes: { exclude: ['password', 'email_verify_token', 'forgot_password_token'] },
         where: {
           role: {
             [Op.or]: [RoleType.Admin, RoleType.User]
           }
-        },
-        order: [['_id', 'ASC']]
+        }
       })
+      const paginatedTickets = users.slice(offset, offset + size)
+      const total_documents = users.length
+      const previous_pages = page > 1 ? page - 1 : null
+      const totalPages = Math.ceil((total_documents - offset) / size)
+      const next_pages = page < totalPages ? page + 1 : null
       return {
-        data: users
+        page: page,
+        size: size,
+        total: total_documents,
+        data: paginatedTickets,
+        previous: previous_pages,
+        next: next_pages
+      }
+    } catch (error) {
+      return new Error('Error: ' + error)
+    }
+  }
+
+  async getAdmin(payload: ParsedQs) {
+    try {
+      let page = parseInt(payload.page as string)
+      let size = parseInt(payload.size as string)
+      if (!page) {
+        page = 1
+      }
+      if (!size) {
+        size = 10
+      }
+      const offset = (page - 1) * size
+      const users = await User.findAll({
+        attributes: { exclude: ['password', 'email_verify_token', 'forgot_password_token'] },
+        where: {
+          role: RoleType.Admin
+        }
+      })
+      const paginatedTickets = users.slice(offset, offset + size)
+      const total_documents = users.length
+      const previous_pages = page > 1 ? page - 1 : null
+      const totalPages = Math.ceil((total_documents - offset) / size)
+      const next_pages = page < totalPages ? page + 1 : null
+      return {
+        page: page,
+        size: size,
+        total: total_documents,
+        data: paginatedTickets,
+        previous: previous_pages,
+        next: next_pages
       }
     } catch (error) {
       return new Error('Error: ' + error)
@@ -331,6 +385,65 @@ class UsersService {
       return {
         error: error
       }
+    }
+  }
+
+  async getUsers(payload: ParsedQs) {
+    try {
+      let page = parseInt(payload.page as string)
+      let size = parseInt(payload.size as string)
+      if (!page) {
+        page = 1
+      }
+      if (!size) {
+        size = 10
+      }
+      const offset = (page - 1) * size
+      const users = await User.findAll({
+        attributes: { exclude: ['password', 'email_verify_token', 'forgot_password_token'] },
+        where: {
+          role: RoleType.User
+        }
+      })
+      const paginatedTickets = users.slice(offset, offset + size)
+      const total_documents = users.length
+      const previous_pages = page > 1 ? page - 1 : null
+      const totalPages = Math.ceil((total_documents - offset) / size)
+      const next_pages = page < totalPages ? page + 1 : null
+      return {
+        page: page,
+        size: size,
+        total: total_documents,
+        data: paginatedTickets,
+        previous: previous_pages,
+        next: next_pages
+      }
+    } catch (error) {
+      return new Error('Error: ' + error)
+    }
+  }
+
+  async banAllUsers({ id, verify }: { id: string; verify: UserVerifyStatus }) {
+    try {
+      await User.update({ verify: verify, updated_at: new Date() }, { where: { _id: id } })
+      const user = await User.findByPk(id)
+      return {
+        data: user
+      }
+    } catch (error) {
+      return new Error('Error: ' + error)
+    }
+  }
+
+  async banUsers({ id, verify }: { id: string; verify: UserVerifyStatus }) {
+    try {
+      await User.update({ verify: verify, updated_at: new Date() }, { where: { _id: id } })
+      const user = await User.findByPk(id)
+      return {
+        data: user
+      }
+    } catch (error) {
+      return new Error('Error: ' + error)
     }
   }
 }

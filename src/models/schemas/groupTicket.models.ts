@@ -33,7 +33,7 @@ class GroupTicket extends Model {
         },
         short_description: {
           type: DataTypes.TEXT,
-          allowNull: false
+          allowNull: true
         },
         description: {
           type: DataTypes.TEXT,
@@ -41,11 +41,11 @@ class GroupTicket extends Model {
         },
         date_start: {
           type: DataTypes.DATE,
-          allowNull: false
+          allowNull: true
         },
         date_end: {
           type: DataTypes.DATE,
-          allowNull: false
+          allowNull: true
         },
         activated: {
           type: DataTypes.ENUM(ActivatedStatus.Activated, ActivatedStatus.NotActivated),

@@ -3,6 +3,7 @@ import { validate } from '~/utils/validation'
 import { USERS_MESSAGES } from '~/constants/messages'
 import groupTicketsService from '~/services/groupTickets.services'
 import ticketsService from '~/services/tickets.services'
+import { ShownStatus } from '~/constants/enums'
 
 const idSchema: ParamSchema = {
   isString: {
@@ -76,9 +77,6 @@ const priceSchema: ParamSchema = {
 }
 
 const dayOfWeekSchema: ParamSchema = {
-  notEmpty: {
-    errorMessage: USERS_MESSAGES.DAY_OF_WEEK_IS_REQUIRED
-  },
   isString: {
     errorMessage: USERS_MESSAGES.DAY_OF_WEEK_MUST_BE_A_STRING
   },
@@ -171,16 +169,32 @@ export const createTicketValidator = validate(
   checkSchema(
     {
       gid: gidSchema,
+      code_ticket: {
+        optional: true,
+        ...codeTicketSchema
+      },
       name: nameSchema,
       price: priceSchema,
-      day_of_week: dayOfWeekSchema,
+      day_of_week: {
+        optional: true,
+        ...dayOfWeekSchema
+      },
       short_description: shortDescriptionSchema,
       default_daily_quota: defaultDailyQuotaSchema,
       // description: descriptionSchema,
-      color: colorSchema,
+      color: {
+        optional: true,
+        ...colorSchema
+      },
       card_type: cardTypeSchema,
-      date_start: dateStartSchema,
-      date_end: dateEndSchema
+      date_start: {
+        optional: true,
+        ...dateStartSchema
+      },
+      date_end: {
+        optional: true,
+        ...dateEndSchema
+      }
     },
     ['body']
   )
@@ -190,6 +204,10 @@ export const updateTicketValidator = validate(
   checkSchema(
     {
       id: idSchema,
+      code_ticket: {
+        optional: true,
+        ...codeTicketSchema
+      },
       gid: {
         optional: true,
         ...gidSchema,
@@ -207,8 +225,7 @@ export const updateTicketValidator = validate(
       },
       day_of_week: {
         optional: true,
-        ...dayOfWeekSchema,
-        notEmpty: undefined
+        ...dayOfWeekSchema
       },
       short_description: {
         optional: true,
@@ -251,6 +268,24 @@ export const deleteTicketValidator = validate(
     {
       id: idSchema
     },
-    ['body']
+    ['params']
+  )
+)
+
+export const changeStatusTicketValidator = validate(
+  checkSchema(
+    {
+      id: idSchema,
+      shown: {
+        notEmpty: {
+          errorMessage: USERS_MESSAGES.GROUP_TICKET_STATUS_IS_REQUIRED
+        },
+        isIn: {
+          options: [ShownStatus],
+          errorMessage: USERS_MESSAGES.STATUS_INVALID
+        }
+      }
+    },
+    ['params', 'body']
   )
 )

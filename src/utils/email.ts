@@ -1,14 +1,16 @@
 import nodemailer from 'nodemailer'
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.mailtrap.io',
+  host: 'live.smtp.mailtrap.io',
   secure: false,
   port: 2525,
   service: 'Gmail',
   auth: {
     user: process.env.USER_MAIL,
     pass: process.env.USER_PASSWORD
-  }
+  },
+  logger: true,
+  debug: true
 })
 
 const createSendEmailCommand = ({

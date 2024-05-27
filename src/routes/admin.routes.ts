@@ -1,27 +1,48 @@
 import { Router } from 'express'
 import { wrapRequestHandler } from '~/utils/handlers'
 import {
+  changeStatusGroupController,
   createGroupTicketsController,
   deleteGroupTicketsController,
   getAllGroupTicketsController,
   updateGroupTicketsController
 } from '~/controllers/groupTickets.controllers'
 import {
+  changeStatusGroupValidator,
   createGroupValidator,
   deleteGroupValidator,
   updateGroupValidator
 } from '~/middlewares/groupTickets.middlewares'
 import { filterMiddleware } from '~/middlewares/common.middlewares'
 import { UpdateGroupReqBody } from '~/models/Requests/groupTicket.requests'
-import { setRoleValidator, roleAdminValidator, roleSuperAdminValidator } from '~/middlewares/admin.middlewares'
-import { getUsersController, setRoleController } from '~/controllers/admin.controllers'
 import {
+  setRoleValidator,
+  roleAdminValidator,
+  roleSuperAdminValidator,
+  banAllUsersValidator,
+  banUsersValidator
+} from '~/middlewares/admin.middlewares'
+import {
+  banAllUsersController,
+  banUsersController,
+  getAdminController,
+  getAllUsersController,
+  getUsersController,
+  setRoleController
+} from '~/controllers/admin.controllers'
+import {
+  changeStatusTicketController,
   createTicketsController,
   deleteTicketController,
   getAllTicketsController,
   updateTicketController
 } from '~/controllers/tickets.controllers'
-import { createTicketValidator, deleteTicketValidator, updateTicketValidator } from '~/middlewares/tickets.middlewares'
+import {
+  changeStatusTicketValidator,
+  createTicketValidator,
+  deleteTicketValidator,
+  updateTicketValidator
+} from '~/middlewares/tickets.middlewares'
 import { UpdateTicketReqBody } from '~/models/Requests/ticket.requests'
 import { getAllPaymentsController } from '~/controllers/payments.controllers'
 import { uploadTicketImageController } from '~/controllers/medias.controllers'
@@ -29,9 +50,27 @@ import { getAllReviewsController } from '~/controllers/reviews.controllers'
 
 const adminRouter = Router()
 
-adminRouter.get('/users/data', roleSuperAdminValidator, wrapRequestHandler(getUsersController))
+adminRouter.get('/all-users/data', roleSuperAdminValidator, wrapRequestHandler(getAllUsersController))
 
-adminRouter.post('/users/set-role', roleSuperAdminValidator, setRoleValidator, wrapRequestHandler(setRoleController))
+adminRouter.get('/all-users/admin/data', roleSuperAdminValidator, wrapRequestHandler(getAdminController))
+
+adminRouter.get('/users/data', roleAdminValidator, wrapRequestHandler(getUsersController))
+
+adminRouter.post(
+  '/all-users/set-role',
+  roleSuperAdminValidator,
+  setRoleValidator,
+  wrapRequestHandler(setRoleController)
+)
+
+adminRouter.post(
+  '/all-users/ban/:id',
+  roleSuperAdminValidator,
+  banAllUsersValidator,
+  wrapRequestHandler(banAllUsersController)
+)
+
+adminRouter.post('/users/ban/:id', roleAdminValidator, banUsersValidator, wrapRequestHandler(banUsersController))
 
 adminRouter.get('/group-tickets/data', roleAdminValidator, wrapRequestHandler(getAllGroupTicketsController))
 
@@ -51,7 +90,14 @@ adminRouter.patch(
 )
 
 adminRouter.post(
-  '/group-tickets/delete',
+  '/group-tickets/change-status/:id',
+  roleAdminValidator,
+  changeStatusGroupValidator,
+  wrapRequestHandler(changeStatusGroupController)
+)
+
+adminRouter.post(
+  '/group-tickets/delete/:id',
   roleAdminValidator,
   deleteGroupValidator,
   wrapRequestHandler(deleteGroupTicketsController)
@@ -97,10 +143,17 @@ adminRouter.patch(
 )
 
 adminRouter.post(
-  '/tickets/delete',
+  '/tickets/delete/:id',
   roleAdminValidator,
   deleteTicketValidator,
   wrapRequestHandler(deleteTicketController)
+)
+
+adminRouter.post(
+  '/tickets/change-status/:id',
+  roleAdminValidator,
+  changeStatusTicketValidator,
+  wrapRequestHandler(changeStatusTicketController)
 )
 
 adminRouter.get('/payments/data', roleAdminValidator, wrapRequestHandler(getAllPaymentsController))

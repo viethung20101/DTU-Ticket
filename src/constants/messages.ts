@@ -76,6 +76,7 @@ export const USERS_MESSAGES = {
   GET_TICKET_DETAILS_SUCCESS: 'Get ticket details success',
   REFRESH_TOKEN_SUCCESS: 'Refresh token success',
   GET_ALL_USERS_SUCCESS: 'Get all users success',
+  GET_ALL_ADMIN_SUCCESS: 'Get all admin success',
   DEFAULT_DAILY_QUOTA_IS_REQUIRED: 'Default daily quota is required',
   DEFAULT_DAILY_QUOTA_MUST_BE_A_NUMERIC: 'Default daily quota must be a numeric',
   QUANTITY_IS_REQUIRED: 'Quantity is required',
@@ -86,7 +87,13 @@ export const USERS_MESSAGES = {
   TICKET_USE_DATE_IS_INVALID: 'Ticket use date is invalid',
   PRICE_INVALID: 'Price invalid',
   DEFAULT_DAILY_QUOTA_INVALID: 'Default daily quota invalid',
-  UPDATE_PROFILE_SUCCESS: 'Update profile success'
+  UPDATE_PROFILE_SUCCESS: 'Update profile success',
+  GROUP_TICKET_STATUS_IS_REQUIRED: 'Group ticket status is required',
+  STATUS_INVALID: 'Status invalid',
+  CHANGE_STATUS_SUCCESS: 'Change status success',
+  TICKET_STATUS_IS_REQUIRED: 'Ticket status is required',
+  USERS_STATUS_IS_REQUIRED: 'Users status is required',
+  BAN_USER_SUCCESS: 'Ban user success'
 } as const
 
 export const PAYMENTS_MESSAGES = {

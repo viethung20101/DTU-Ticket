@@ -38,7 +38,6 @@ class TicketsService {
       if (!size) {
         size = 10
       }
-      const limit = size
       const offset = (page - 1) * size
 
       if (payload.price) {
@@ -229,9 +228,18 @@ class TicketsService {
     }
   }
 
-  async getAllTickets() {
+  async getAllTickets(payload: ParsedQs) {
     try {
-      const ticket = await Ticket.findAll({
+      let page = parseInt(payload.page as string)
+      let size = parseInt(payload.size as string)
+      if (!page) {
+        page = 1
+      }
+      if (!size) {
+        size = 10
+      }
+      const offset = (page - 1) * size
+      const tickets = await Ticket.findAll({
         include: [
           {
             model: GroupTicket,
@@ -240,8 +248,18 @@ class TicketsService {
           }
         ]
       })
+      const paginatedTickets = tickets.slice(offset, offset + size)
+      const total_documents = tickets.length
+      const previous_pages = page > 1 ? page - 1 : null
+      const totalPages = Math.ceil((total_documents - offset) / size)
+      const next_pages = page < totalPages ? page + 1 : null
       return {
-        data: ticket
+        page: page,
+        size: size,
+        total: total_documents,
+        data: paginatedTickets,
+        previous: previous_pages,
+        next: next_pages
       }
     } catch (error) {
       return {
@@ -251,15 +269,15 @@ class TicketsService {
   }
 
   async createTicket(payload: CreateTicketReqBody) {
+    payload.date_start = payload.date_start ? new Date(payload.date_start) : payload.date_start
+    payload.date_end = payload.date_end ? new Date(payload.date_end) : payload.date_end
     try {
       const ticket_id = uuidv4()
       await Ticket.create({
         _id: ticket_id,
         ...payload,
         daily_quota: payload.default_daily_quota,
-        last_reset_date: new Date(),
-        date_start: new Date(payload.date_start),
-        date_end: new Date(payload.date_end)
+        last_reset_date: new Date()
       })
     } catch (error) {
       return {
@@ -344,6 +362,18 @@ class TicketsService {
       }
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  async changeStatusTicket({ id, shown }: { id: string; shown: ShownStatus }) {
+    try {
+      await Ticket.update({ shown: shown, updated_at: new Date() }, { where: { _id: id } })
+      const ticket = await Ticket.findByPk(id)
+      return {
+        data: ticket
+      }
+    } catch (error) {
+      throw new Error('Error: ' + error)
     }
   }
 }
